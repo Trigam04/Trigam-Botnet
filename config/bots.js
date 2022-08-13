@@ -17,7 +17,7 @@ module.exports = {
             }]
         },
         // !!! IMPORTANT !!!
-        token: "OTgyNzE3NTA0NDgyODY5MzAx.Ge86P5.w3tE4CG3y9ufSNh4ntf15JUXC5Yut2mZgyRzlg",
+        token: "0d9e0d9e0d9e0d9e",
         publicRelease: false,
     },
     // Joystick - Games
@@ -37,7 +37,7 @@ module.exports = {
             }]
         },
         // !!! IMPORTANT !!!
-        token: "MTAwNTU5NDkxNzI3NzU0ODcwNA.GvqXvT.PF5pATVYgPO7EnMZxpeGKxQhxiDYVgby_1PHag",
+        token: "0d9e0d9e0d9e0d9e",
         publicRelease: false,
     },
     // Toolbox - Utility
@@ -57,7 +57,7 @@ module.exports = {
             }]
         },
         // !!! IMPORTANT !!!
-        token: "MTAwNTY0ODIxNjM2NjI2MDM1NA.GomSLD.a3LgHbcWAhrilgRLcdhKC7EE8ZSsawY1NbhXyA",
+        token: "0d9e0d9e0d9e0d9e",
         publicRelease: false,
     },
     // Hammer - Moderation
@@ -77,7 +77,7 @@ module.exports = {
             }]
         },
         // !!! IMPORTANT !!!
-        token: "MTAwNTY4MzEyMjc0NDA3NDI3MQ.GAu_kr.l1VcnfhaS3foIuASfcS5-QosrrJj0BRDLBWdKA",
+        token: "0d9e0d9e0d9e0d9e",
         publicRelease: false,
     },
     // Cog - Custom Commands
@@ -97,7 +97,7 @@ module.exports = {
             }]
         },
         // !!! IMPORTANT !!!
-        token: "MTAwNTY4NDUzMTA0MDM2NjcwMw.GY9bJI.rJaLnNe_SZQKU-eemWMxrxJ430bVN1cmbc1w6o",
+        token: "0d9e0d9e0d9e0d9e",
         publicRelease: false,
     },
     // Box - Fun
@@ -117,7 +117,7 @@ module.exports = {
             }]
         },
         // !!! IMPORTANT !!!
-        token: "MTAwNTg5MTM1MTQ5OTUyNjE4Ng.GiNsap.g_CbytHQuVMt6qDivK_gDcPL4tETrhLg3OMsos",
+        token: "0d9e0d9e0d9e0d9e",
         publicRelease: false,
     }
 };
