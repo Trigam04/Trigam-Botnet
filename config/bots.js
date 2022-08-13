@@ -17,7 +17,7 @@ module.exports = {
             }]
         },
         // !!! IMPORTANT !!!
-        token: "0d9e0d9e0d9e0d9e",
+        token: "0d9e0d9e0d9e0d9e0d9e",
         publicRelease: false,
     },
     // Joystick - Games
@@ -37,7 +37,7 @@ module.exports = {
             }]
         },
         // !!! IMPORTANT !!!
-        token: "0d9e0d9e0d9e0d9e",
+        token: "0d9e0d9e0d9e0d9e0d9e",
         publicRelease: false,
     },
     // Toolbox - Utility
@@ -57,7 +57,7 @@ module.exports = {
             }]
         },
         // !!! IMPORTANT !!!
-        token: "0d9e0d9e0d9e0d9e",
+        token: "0d9e0d9e0d9e0d9e0d9e",
         publicRelease: false,
     },
     // Hammer - Moderation
@@ -77,7 +77,7 @@ module.exports = {
             }]
         },
         // !!! IMPORTANT !!!
-        token: "0d9e0d9e0d9e0d9e",
+        token: "0d9e0d9e0d9e0d9e0d9e",
         publicRelease: false,
     },
     // Cog - Custom Commands
@@ -97,7 +97,7 @@ module.exports = {
             }]
         },
         // !!! IMPORTANT !!!
-        token: "0d9e0d9e0d9e0d9e",
+        token: "0d9e0d9e0d9e0d9e0d9e",
         publicRelease: false,
     },
     // Box - Fun
@@ -117,7 +117,7 @@ module.exports = {
             }]
         },
         // !!! IMPORTANT !!!
-        token: "0d9e0d9e0d9e0d9e",
+        token: "0d9e0d9e0d9e0d9e0d9e",
         publicRelease: false,
     }
 };
