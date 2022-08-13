@@ -9,7 +9,7 @@ module.exports = {
         lastUpdated: "N/A",
         clientID: '982717504482869301',
         activity: {
-            status: 'online',
+            status: 'dnd',
             afk: false,
             activities: [{
                 name: 'your sick tunes!',
@@ -17,7 +17,7 @@ module.exports = {
             }]
         },
         // !!! IMPORTANT !!!
-        token: "",
+        token: "OTgyNzE3NTA0NDgyODY5MzAx.Ge86P5.w3tE4CG3y9ufSNh4ntf15JUXC5Yut2mZgyRzlg",
         publicRelease: false,
     },
     // Joystick - Games
@@ -29,7 +29,7 @@ module.exports = {
         lastUpdated: "N/A",
         clientID: '1005594917277548704',
         activity: {
-            status: 'online',
+            status: 'dnd',
             afk: false,
             activities: [{
                 name: 'games with you!',
@@ -37,7 +37,7 @@ module.exports = {
             }]
         },
         // !!! IMPORTANT !!!
-        token: "",
+        token: "MTAwNTU5NDkxNzI3NzU0ODcwNA.GvqXvT.PF5pATVYgPO7EnMZxpeGKxQhxiDYVgby_1PHag",
         publicRelease: false,
     },
     // Toolbox - Utility
@@ -49,7 +49,7 @@ module.exports = {
         lastUpdated: "N/A",
         clientID: '1005648216366260354',
         activity: {
-            status: 'online',
+            status: 'dnd',
             afk: false,
             activities: [{
                 name: 'for people to help!',
@@ -57,7 +57,7 @@ module.exports = {
             }]
         },
         // !!! IMPORTANT !!!
-        token: "",
+        token: "MTAwNTY0ODIxNjM2NjI2MDM1NA.GomSLD.a3LgHbcWAhrilgRLcdhKC7EE8ZSsawY1NbhXyA",
         publicRelease: false,
     },
     // Hammer - Moderation
@@ -69,7 +69,7 @@ module.exports = {
         lastUpdated: "N/A",
         clientID: '1005683122744074271',
         activity: {
-            status: 'online',
+            status: 'dnd',
             afk: false,
             activities: [{
                 name: 'for troublemakers!',
@@ -77,7 +77,7 @@ module.exports = {
             }]
         },
         // !!! IMPORTANT !!!
-        token: "",
+        token: "MTAwNTY4MzEyMjc0NDA3NDI3MQ.GAu_kr.l1VcnfhaS3foIuASfcS5-QosrrJj0BRDLBWdKA",
         publicRelease: false,
     },
     // Cog - Custom Commands
@@ -89,7 +89,7 @@ module.exports = {
         lastUpdated: "N/A",
         clientID: '1005684531040366703',
         activity: {
-            status: 'online',
+            status: 'dnd',
             afk: false,
             activities: [{
                 name: 'for new commands!',
@@ -97,7 +97,7 @@ module.exports = {
             }]
         },
         // !!! IMPORTANT !!!
-        token: "",
+        token: "MTAwNTY4NDUzMTA0MDM2NjcwMw.GY9bJI.rJaLnNe_SZQKU-eemWMxrxJ430bVN1cmbc1w6o",
         publicRelease: false,
     },
     // Box - Fun
@@ -109,7 +109,7 @@ module.exports = {
         lastUpdated: "N/A",
         clientID: '1005891351499526186',
         activity: {
-            status: 'online',
+            status: 'dnd',
             afk: false,
             activities: [{
                 name: 'around with you!',
@@ -117,7 +117,7 @@ module.exports = {
             }]
         },
         // !!! IMPORTANT !!!
-        token: "",
+        token: "MTAwNTg5MTM1MTQ5OTUyNjE4Ng.GiNsap.g_CbytHQuVMt6qDivK_gDcPL4tETrhLg3OMsos",
         publicRelease: false,
     }
 };

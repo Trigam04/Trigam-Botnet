@@ -35,12 +35,12 @@ module.exports = {
                 //try { var video = await bot.distube.search(search) } catch (e) { };
                 // If bypassing confirmation
                 if (options.force) {
-                    interaction.editReply({
+                    await interaction.editReply({
                         embeds: [
                             componentBuilder.songConfirmRecieveEmbed(Discord, bot, video ? video[0] : null)
                         ], ephemeral: true
                     });
-                    return await bot.distube.play(voiceChannel, search, { textChannel: interaction.channel, member: interaction.member });
+                    return bot.distube.play(voiceChannel, search, { textChannel: interaction.channel, member: interaction.member });
                 }
                 // Confirm playing the song
                 await interaction.editReply({ ephemeral: true, embeds: [
@@ -59,7 +59,7 @@ module.exports = {
                         interaction.editReply({
                             embeds: [
                                 componentBuilder.songConfirmRecieveEmbed(Discord, bot,
-                                    `Added \`${video[0].name}\` - \`(${video[0].formattedDuration})\` to the queue!`,
+                                    `Added \`${video[0] ? video[0].name : null}\` - \`(${video[0] ? video[0].formattedDuration : null})\` to the queue!`,
                                     embedConfig.colors.accept,
                                 video[0])
                             ]

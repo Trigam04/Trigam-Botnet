@@ -1,5 +1,6 @@
 const { EmbedBuilder, ActionRowBuilder, ButtonBuilder, ButtonStyle } = require('discord.js');
 const embedConfig = require('../config/embeds.js');
+const ut = require('./utilitrigam.js');
 module.exports = {
     basicEmbed: (title, description, color, thumbnail, footer) => {
         return new EmbedBuilder()
@@ -7,7 +8,7 @@ module.exports = {
             .setTitle(title)
             .setDescription(description)
             .setThumbnail(thumbnail)
-            .setFooter(footer)
+            .setFooter({ text: footer })
     },
     songInfoEmbed: (Discord, bot, title, color, video) => {
         return new EmbedBuilder()
@@ -54,5 +55,12 @@ module.exports = {
             .setTitle(`Request received!`)
             .setDescription(desc)
             .setImage(video ? video.thumbnail : null)
+    },
+    definitionEmbed: (Discord, bot, search) => {
+        return new EmbedBuilder()
+            .setColor(embedConfig.colors.default)
+            .setTitle(`${search.word}`)
+            .setDescription(`${ut.unurban(search.definition)}\n\n*${ut.unurban(search.example)}*`)
+            .setFooter({ text: `👍 ${search.thumbs_up}   •   👎 ${search.thumbs_down}` })
     }
 }

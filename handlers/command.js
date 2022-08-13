@@ -1,5 +1,7 @@
 var config = require('../config/config.js')
 const fs = require('fs');
+const { REST } = require('@discordjs/rest');
+const { Routes } = require('discord.js');
 
 module.exports = (bot, Discord) => {
     const commands = [];
@@ -12,8 +14,11 @@ module.exports = (bot, Discord) => {
 
     bot.on("ready", async () => {
         if (bot.config.publicRelease) await bot.applications.commands.set(commands);
+        const rest = new REST({ version: '10' }).setToken(bot.token);
         for (const server of config.whitelistedServers) {
-            await bot.guilds.cache.get(server).commands.set(commands);
+            if (bot.guilds.cache.has(server)) {
+                await bot.guilds.cache.get(server).commands.set(commands);
+            }
         }
     });
 }
