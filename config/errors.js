@@ -48,5 +48,10 @@ module.exports = {
         description: "You don't have permission to use this bot!",
         code: "NO_BOT_ACCESS",
         value: "ERR_9"
+    },
+    noUrbanResults: {
+        description: "There weren't any results found!",
+        code: "NO_URBAN_RESULTS",
+        value: "ERR_10"
     }
 }
