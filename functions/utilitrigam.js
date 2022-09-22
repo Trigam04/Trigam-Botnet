@@ -28,6 +28,11 @@ const functions = {
     convertRange: (value, r1, r2) => { return ( value - r1[0] ) * ( r2[1] - r2[0] ) / ( r1[1] - r1[0] ) + r2[0] },
     repeat: (text, num) => { if (!isNaN(Number(num)) && num !== undefined) return text.repeat(functions.limit(Number(num), 0, 500)); else return ''; },
     limit: (number, min = 0, max = 4294967296) => { return number < min ? min : number > max ? max : number; },
-    unurban: (str) => { return str.replace(/\[/g, '__').replace(/\]/g, '__') }
+    unurban: (str, remove) => { return str.replace(/\[/g, remove ? '' : '__').replace(/\]/g, remove ? '' : '__') },
+    fetchURL: async (url) => {
+        let response = await fetch(url);
+        let data = await response.json();
+        return data;
+    },
 }
 module.exports = functions;
