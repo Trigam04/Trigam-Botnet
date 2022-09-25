@@ -1,4 +1,4 @@
-const ut = require('./utilitrigam.js');
+const funcs = require('./funcs.js');
 const replaceAsync = require("string-replace-async");
 module.exports = execute;
 
@@ -30,18 +30,14 @@ async function substitute(inputCode) {
         // Crack open the brackets to get the expression from inside
         substring = substring.slice(1, -1).split("|");
         // Evaluate the expression (or just return the expression if it's not valid)
-        if (calculate[substring[0]]) return await calculate[substring[0]](...substring.slice(1));
+        if (funcs[substring[0]]) return await funcs[substring[0]](...substring.slice(1));
         else return gvars[substring[0]] || `{${substring.join('|')}}`;
     });
 };
 
-// Calculate the result of a bracketed expression
-const calculate = {
-    // MATH/NUMBERS
-    add: (...nums) => { return nums.reduce((a, b) => Number(a) + Number(b)) },
-};
-
 // All of the predefined variables
 const gvars = {
-    'bruh': 'mongus'
+    '#': '',
+    '//': '',
+    '\\n': '\n',
 };
