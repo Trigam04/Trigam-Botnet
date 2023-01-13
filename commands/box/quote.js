@@ -9,7 +9,7 @@ const shrek = require('../../pools/quotes/shrek.json');
 const vector = require('../../pools/quotes/vector.json');
 module.exports = {
     name: "quote",
-    description: "Give quotes from your favorite characters!",
+    description: "Get quotes from your favorite characters!",
     options: [
         {
             type: ApplicationCommandOptionType.String,

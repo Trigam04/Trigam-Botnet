@@ -5,6 +5,7 @@ const errorBuilder = require('../../functions/errorBuilder.js');
 const componentBuilder = require('../../functions/componentBuilder.js');
 const ut = require('../../functions/utilitrigam.js');
 const { SoundCloudPlugin } = require('@distube/soundcloud');
+const { SpotifyPlugin } = require('@distube/spotify');
 module.exports = {
     name: "play",
     description: "Plays a song",
@@ -60,10 +61,8 @@ module.exports = {
                     }
                 });
                 collector.on('end', collected => {
-                    interaction.editReply({
-                        components: [ ]
-                    });
-                })
+                    interaction.editReply({ components: [ ] });
+                });
             }
             
         } catch (e) { return interaction.reply(errorBuilder(Discord, bot, errors.errorRunningCommand)); }
@@ -87,6 +86,7 @@ module.exports = {
             var video = null;
             if (!options.source || options.source == 'youtube') try { video = await bot.distube.search(search); } catch (e) {};
             if (!video || options.source == 'soundcloud') try { video = await SoundCloudPlugin.search(search); } catch (e) {};
+            if (!video || options.source == 'spotify') try { video = await SpotifyPlugin.search } catch (e) {};
             return video;
         };
     }
