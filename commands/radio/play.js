@@ -28,10 +28,9 @@ module.exports = {
         try {
             var search = options.query;
             await interaction.deferReply();
-            if (ut.validURL(search)) { // Using URL
+            if (ut.validURL(search)) {
                 return playSongURL(search, interaction, voiceChannel);
             } else {
-                // If using search term
                 let video = await searchVideo(search);
                 if (options.force) return playSongURL(video[0], interaction, voiceChannel);
                 // Select menu
