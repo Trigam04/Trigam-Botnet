@@ -1,6 +1,7 @@
 const { EmbedBuilder, ActionRowBuilder, ButtonBuilder, ButtonStyle, SelectMenuBuilder, Embed } = require('discord.js');
 const embedConfig = require('../config/embeds.js');
 const presences = require('../types/presence.js');
+const emojis = require('../config/emojis.js');
 const ut = require('./utilitrigam.js');
 const components = {
     basicEmbed: (title, description, color, thumbnail, footer) => {
@@ -114,7 +115,8 @@ const components = {
                     return {
                         label: `${i}. ${item.name}`,
                         value: item.url,
-                        description: item.formattedDuration
+                        description: item.formattedDuration,
+                        emoji: emojis[item.source]
                     }
                 }))
         )

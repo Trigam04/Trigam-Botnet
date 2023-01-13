@@ -19,6 +19,16 @@ module.exports = {
             name: 'force',
             description: 'Force the song to play without a confirmation',
             required: false
+        }, {
+            type: ApplicationCommandOptionType.String,
+            name: 'source',
+            description: 'The source platform of the song',
+            required: false,
+            choices: [
+                { name: 'YouTube', value: 'youtube' },
+                { name: 'SoundCloud', value: 'soundcloud' },
+                { name: 'Spotify', value: 'spotify' },
+            ]
         }
     ],
     type: ApplicationCommandType.ChatInput,
@@ -31,12 +41,12 @@ module.exports = {
             if (ut.validURL(search)) {
                 return playSongURL(search, interaction, voiceChannel);
             } else {
-                let video = await searchVideo(search);
-                if (options.force) return playSongURL(video[0], interaction, voiceChannel);
+                let videos = await searchVideo(search);
+                if (options.force) return playSongURL(videos[0], interaction, voiceChannel);
                 // Select menu
-                var selectMenu = componentBuilder.songSelectMenu(Discord, bot, video);
+                var selectMenu = componentBuilder.songSelectMenu(Discord, bot, videos);
                 await interaction.editReply({ embeds: [
-                    componentBuilder.songInfoEmbed("Select a song to play", embedConfig.colors.prompt, video[0])
+                    componentBuilder.songInfoEmbed("Select a song to play", embedConfig.colors.prompt, videos[0])
                 ], components: [ selectMenu ] });
                 // Listen for select menu presses
                 const collector = interaction.channel.createMessageComponentCollector(ut.collectFilter, { time: 60000 });
@@ -44,7 +54,7 @@ module.exports = {
                     if (i.customId === 'music_play_song_select') {
                         i.deferUpdate();
                         let selectedURL = i.values[0];
-                        let selected = await searchVideo(selectedURL); selected = selected[0];
+                        let selected = videos.filter(video => video.url == selectedURL)[0];
                         await playSongURL(selected, interaction, voiceChannel);
                         collector.stop();
                     }
@@ -75,8 +85,8 @@ module.exports = {
 
         async function searchVideo(search) {
             var video = null;
-            try { video = await bot.distube.search(search); } catch (e) { return interaction.reply(errorBuilder(Discord, bot, errors.errorRunningCommand)); };
-            if (!video) try { video = await SoundCloudPlugin.search(search); } catch (e) { return interaction.reply(errorBuilder(Discord, bot, errors.errorRunningCommand)); };
+            if (!options.source || options.source == 'youtube') try { video = await bot.distube.search(search); } catch (e) {};
+            if (!video || options.source == 'soundcloud') try { video = await SoundCloudPlugin.search(search); } catch (e) {};
             return video;
         };
     }
