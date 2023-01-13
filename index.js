@@ -18,6 +18,7 @@ botClients.Radio.distube = new DisTube(botClients.Radio, {
     plugins: [ new SpotifyPlugin(), new YtDlpPlugin(), new SoundCloudPlugin() ]
 });
 
+// Setup each bot
 for (i = 0; i < Object.keys(botClients).length; i++) {
     var bot = Object.values(botClients)[i];
     var botConfig = Object.values(botConfigs)[i];
