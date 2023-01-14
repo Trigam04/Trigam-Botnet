@@ -35,7 +35,7 @@ module.exports = {
     type: ApplicationCommandType.ChatInput,
 	execute: async (Discord, bot, interaction, options, subcommand) => {
         const voiceChannel = interaction.member.voice.channel;
-        if (!voiceChannel) return interaction.reply(errorBuilder(Discord, bot, errors.notInVc)); // Not in VC
+        if (!voiceChannel) return interaction.reply(errorBuilder(errors.notInVc)); // Not in VC
         try {
             var search = options.query;
             await interaction.deferReply();
@@ -65,10 +65,10 @@ module.exports = {
                 });
             }
             
-        } catch (e) { return interaction.reply(errorBuilder(Discord, bot, errors.errorRunningCommand)); }
+        } catch (e) { return interaction.reply(errorBuilder(errors.errorRunningCommand)); }
 
         async function playSongURL(video, interaction, vc) {
-            if (!video) return interaction.editReply(errorBuilder(Discord, bot, errors.noSongResults)); // No results
+            if (!video) return interaction.editReply(errorBuilder(errors.noSongResults)); // No results
             // Embed
             await interaction.editReply({
                 embeds: [
@@ -78,7 +78,7 @@ module.exports = {
             // Play song
             try { bot.distube.play(vc, video.url ? video.url : video, { textChannel: interaction.channel, member: interaction.member }); }
             catch (e) { return interaction.channel.send({
-                embeds: [ errorBuilder(Discord, bot, errors.couldntPlaySong) ]
+                embeds: [ errorBuilder(errors.couldntPlaySong) ]
             }) }
         }
 

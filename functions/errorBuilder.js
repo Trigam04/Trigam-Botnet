@@ -1,6 +1,6 @@
 const { EmbedBuilder } = require('discord.js');
 const embedConfig = require('../config/embeds.js');
-module.exports = (Discord, bot, error) => {
+module.exports = (error) => {
     return {
         embeds: [
             new EmbedBuilder()

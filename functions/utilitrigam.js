@@ -43,5 +43,23 @@ const functions = {
     decimalToBinary: (num) => { return (num >>> 0).toString(2) },
     binaryToDecimal: (num) => { return parseInt(num, 2) },
     ellipsify: (str, max) => { return str.length > max ? str.substring(0, max - 3) + '...' : str },
+    canvasSetFont: (ctx, fontFamily, fontSize, color, outlineColor, outlineWidth, align) => {
+        ctx.font = `${fontSize}px ${fontFamily}`;
+        ctx.fillStyle = color;
+        ctx.strokeStyle = outlineColor;
+        ctx.lineWidth = outlineWidth;
+        ctx.textAlign = align;
+    },
+    canvasSetShadow: (ctx, color, blur, offsetX, offsetY) => {
+        ctx.shadowColor = color;
+        ctx.shadowBlur = blur;
+        ctx.shadowOffsetX = offsetX;
+        ctx.shadowOffsetY = offsetY;
+    },
+    canvasWriteText: (ctx, text, x, y, outline) => {
+        ctx.fillText(text, x, y);
+        ctx.shadowOffsetX = ctx.shadowOffsetY = 0;
+        if (outline) ctx.strokeText(text, x, y);
+    },
 };
 module.exports = functions;

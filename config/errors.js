@@ -64,4 +64,9 @@ module.exports = {
         code: "COULDNT_PLAY_SONG",
         value: "ERR_12"
     },
+    gdUserNotFound: {
+        description: "That user wasn't found!",
+        code: "GD_USER_NOT_FOUND",
+        value: "ERR_13"
+    },
 }

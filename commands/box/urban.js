@@ -18,7 +18,7 @@ module.exports = {
     type: ApplicationCommandType.ChatInput,
 	execute: async (Discord, bot, interaction, options, subcommand) => {
         let search = await fetch(`https://api.urbandictionary.com/v0/define?term=${options.term}`).then(res => res.json());
-        if (!search.list[0]) return interaction.reply({ embeds: [ errorBuilder('Discord', bot, errors.noUrbanResults ) ] });
+        if (!search.list[0]) return interaction.reply({ embeds: [ errorBuilder(errors.noUrbanResults ) ] });
         if (!search.list[1]) {
             return await interaction.reply({
                 embeds: [ componentBuilder.definitionEmbed(Discord, bot, search.list[0]) ],

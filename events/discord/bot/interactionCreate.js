@@ -7,7 +7,7 @@ module.exports = (Discord, bot, interaction) => {
         if (interaction.isCommand()) {
             const command = bot.commands.get(interaction.commandName);
             if (command) return command.execute(Discord, bot, interaction, optionsParser(interaction.options._hoistedOptions), interaction.options._subcommand);
-            else return interaction.reply(errorBuilder(Discord, bot, errors.errorRunningCommand)) && bot.commands.delete(interaction.commandName);
+            else return interaction.reply(errorBuilder(errors.errorRunningCommand)) && bot.commands.delete(interaction.commandName);
         }
-    } else interaction.reply(errorBuilder(Discord, bot, errors.noBotAccess));
+    } else interaction.reply(errorBuilder(errors.noBotAccess));
 }
