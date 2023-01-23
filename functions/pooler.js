@@ -1,4 +1,5 @@
 const seedrandom = require('seedrandom');
+const ut = require('./utilitrigam.js');
 const logins = require('../pools/start.json');
 const gex = require('../pools/quotes/gex.json');
 const krabs = require('../pools/quotes/krabs.json');
@@ -9,18 +10,20 @@ const shrek = require('../pools/quotes/shrek.json');
 const vector = require('../pools/quotes/vector.json');
 const ping = require('../pools/ping.json');
 module.exports = {
-    login: (seed) => { return logins[Math.floor(seedrandom(seed)() * logins.length)]; },
-    gex: (seed) => { return gex[Math.floor(seedrandom(seed)() * gex.length)]; },
-    krabs: (seed) => { return krabs[Math.floor(seedrandom(seed)() * krabs.length)]; },
-    maui: (seed) => { return maui[Math.floor(seedrandom(seed)() * maui.length)]; },
-    sans: (seed) => { return sans[Math.floor(seedrandom(seed)() * sans.length)]; },
-    papyrus: (seed) => { return papyrus[Math.floor(seedrandom(seed)() * papyrus.length)]; },
-    shrek: (seed) => { return shrek[Math.floor(seedrandom(seed)() * shrek.length)]; },
-    vector: (seed) => { return vector[Math.floor(seedrandom(seed)() * vector.length)]; },
-    pingGeneral: (seed) => { return ping.general[Math.floor(seedrandom(seed)() * ping.general.length)]; },
-    pingVeryLow: (seed) => { return ping.veryLow[Math.floor(seedrandom(seed)() * ping.veryLow.length)]; },
-    pingLow: (seed) => { return ping.low[Math.floor(seedrandom(seed)() * ping.low.length)]; },
-    pingMedium: (seed) => { return ping.medium[Math.floor(seedrandom(seed)() * ping.medium.length)]; },
-    pingHigh: (seed) => { return ping.high[Math.floor(seedrandom(seed)() * ping.high.length)]; },
-    pingVeryHigh: (seed) => { return ping.veryHigh[Math.floor(seedrandom(seed)() * ping.veryHigh.length)]; },
+    login: (seed) => { return ut.randomElem(logins, seed) },
+    // Quote
+    gex: (seed) => { return ut.randomElem(gex, seed) },
+    krabs: (seed) => { return ut.randomElem(krabs, seed) },
+    maui: (seed) => { return ut.randomElem(maui, seed) },
+    sans: (seed) => { return ut.randomElem(sans, seed) },
+    papyrus: (seed) => { return ut.randomElem(papyrus, seed) },
+    shrek: (seed) => { return ut.randomElem(shrek, seed) },
+    vector: (seed) => { return ut.randomElem(vector, seed) },
+    // Ping
+    pingGeneral: (seed) => { return ut.randomElem(ping.general, seed) },
+    pingVeryLow: (seed) => { return ut.randomElem(ping.veryLow, seed) },
+    pingLow: (seed) => { return ut.randomElem(ping.low, seed) },
+    pingMedium: (seed) => { return ut.randomElem(ping.medium, seed) },
+    pingHigh: (seed) => { return ut.randomElem(ping.high, seed) },
+    pingVeryHigh: (seed) => { return ut.randomElem(ping.veryHigh, seed) },
 }

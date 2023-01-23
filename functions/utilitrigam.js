@@ -1,3 +1,4 @@
+const seedrandom = require('seedrandom');
 const functions = {
     // Vars
     collectFilter: (m) => m.author.id === interaction.author.id,
@@ -60,6 +61,10 @@ const functions = {
         ctx.fillText(text, x, y);
         ctx.shadowOffsetX = ctx.shadowOffsetY = 0;
         if (outline) ctx.strokeText(text, x, y);
+    },
+    randomElem: (arr, seed) => {
+        if (seed) return arr[seedrandom(seed)() * arr.length];
+        else return arr[Math.floor(Math.random() * arr.length)];
     },
 };
 module.exports = functions;

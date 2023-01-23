@@ -5,17 +5,18 @@ module.exports = {
     description: "Responds with the ping of the bot!",
     type: ApplicationCommandType.ChatInput,
 	execute: async (Discord, bot, interaction, options, subcommand) => {
-        let latency = delay = Math.abs(Date.now() - interaction.createdTimestamp);
+        let sent = await interaction.reply({ content: "Pinging...", fetchReply: true });
+        let latency = Math.abs(Date.now() - sent.createdTimestamp);
         var response = "...";
         let general = Math.floor(Math.random() * 2) == 1;
         switch (!general) {
-            case latency < 50: response = pooler.pingVeryLow(interaction.id); break;
-            case latency < 100: response = pooler.pingLow(interaction.id); break;
-            case latency < 250: response = pooler.pingMedium(interaction.id); break;
-            case latency < 1000: response = pooler.pingHigh(interaction.id); break;
-            case latency > 1000: response = pooler.pingVeryHigh(interaction.id); break;
+            case latency < 100: response = pooler.pingVeryLow(); break;
+            case latency < 200: response = pooler.pingLow(); break;
+            case latency < 500: response = pooler.pingMedium(); break;
+            case latency < 1500: response = pooler.pingHigh(); break;
+            case latency > 1500: response = pooler.pingVeryHigh(); break;
         };
-        if (general) response = pooler.pingGeneral(interaction.id);
-        await interaction.reply({ content: `**${response}**\nLatency: \`${latency} ms\`\nWebsocket Latency: \`${bot.ws.ping} ms\`` });
+        if (general) response = pooler.pingGeneral();
+        await interaction.editReply({ content: `**${response}**\nLatency: \`${latency} ms\`\nWebsocket Latency: \`${bot.ws.ping} ms\`` });
     }
 };
