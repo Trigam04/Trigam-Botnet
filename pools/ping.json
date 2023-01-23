@@ -1,15 +1,85 @@
 {
+    "general": [
+        "Hey all, {client|username} here!",
+        "* beep boop *",
+        "I'm definitely a bot, yep.",
+        "Hey Louis, I'm a bot!",
+        "I am become {client|username}, destroyer of servers",
+        "{@}\nHey, you asked to be pinged!",
+        "Hey, how would *you* like it if someone bothered you 5 times a second?",
+        "Hey can you organize my tools real quick for me?",
+        "At your service!",
+        "Whom'st has summoned me?",
+        "Hello",
+        ".. *pong*",
+        "Hi guys what's up",
+        "2.2 when",
+        "Now with 100% latency reduction",
+        "<insert response here>",
+        "Bird up!",
+        "Ego ping, ergo sum",
+        "DELETE THIS",
+        "Egg!",
+        "[Ping responses are temporariliy disabled due to an exploit]",
+        "[You have used /ping too many times, please try again in 5 minutes]",
+        "Hey guys, welcome back to another ping response video",
+        "Hey.. I recognize that username...",
+        "... smash",
+        "Self-destructing in 3... 2... 1...",
+        "Trigam Botnet won't stop until your needs are met",
+        "null",
+        "Object object",
+        "undefined",
+        "Pinging...",
+        "Position in ping queue: 2467",
+        "This response requires Botnet Premium™️",
+        "What's a ping?",
+        "As seen on TV!",
+        "hello i am on your computer",
+        "May contain nuts",
+        "SAMPLE RESPONSE",
+        "cheese'm"
+    ],
     "veryLow": [
-
+        "One day the ping'll be negative, just you watch",
+        "Ping response speedrun any%",
+        "Pack your bags MEE6",
+        "Alright used up all of today's effort, see you tomorrow",
+        "How my code is able to run this fast is beyond me",
+        "Little do you know I went back in time just to make the ping lower",
+        "Oh sorry, was this too fast?",
+        "Happy now, Trigam?",
+        "Not even the gym teacher's grandma is this fast!",
+        "You better not've blinked",
+        "I had to break the laws of physics to get the ping this low",
+        "Yeah I use Linux how'd you know?"
     ],
     "low": [
-
+        "Gotta get the ping even lower",
+        "Maybe if you try it again the ping will be lower",
+        "Responded this fast is a real workout",
+        "Good enough"
     ],
     "medium": [
-
+        ".. *yawn*",
+        "Yeah I wasn't even trying on that one",
+        "This isn't the fastest I can go",
+        "This isn't the 7 ms that was advertised!"
     ],
     "high": [
-        "Well, at least it's something"
+        "Well, at least it's something",
+        "... could be worse",
+        "Pretend I responded earlier",
+        "Well it's not like you had anywhere to be",
+        "Sorry pizza came",
+        ".. i need more sleep",
+        "Sorry was busy caching your info",
+        "That'll teach you to think carefully next time you bother me",
+        "well let's see YOU make a better bot",
+        "Not exactly my proudest moment..",
+        "oops, wrote down the wrong number",
+        "...oh hey, I'm still alive",
+        "huh? you're still there?"
     ],
     "veryHigh": [
         "Bite my shiny metal ass",
@@ -33,6 +103,10 @@
         "skill issue",
         "skull issue 💀",
         "Bots can get tired too, you know",
-        "There, you had enough time to touch some grass"
+        "There, you had enough time to touch some grass",
+        "With the power of Discord.js, I sawed the global internet speed in half!",
+        "... who turned off the lights?",
+        "Whoops, was busy rebooting",
+        "Sponsored by Internet Explorer"
     ]
 }

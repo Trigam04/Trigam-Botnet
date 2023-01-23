@@ -13,53 +13,72 @@ const components = {
         if (footer) emb.setFooter({ text: footer });
         return emb;
     },
-    userInfoEmbed: (user, guild) => {
-        let activity = user.presence.activities[0];
-        if (activity.state) activityString = activity.state;
-        else if (activity.name) activityString = activity.name;
+    userInfoEmbed: (user, member, guild) => {
+        // Activity
+        let activity = member.presence ? member.presence.activities[0] : null;
+        if (activity && activity.state) activityString = activity.state;
+        else if (activity && activity.name) activityString = activity.name;
         else activityString = "No activity";
-        if (activity.emoji) activityString = `${activity.emoji.name} ${activityString}`;
-        console.log(user.presence)
-        return new EmbedBuilder()
-            .setTitle(`${user.nickname ? user.nickname : user.user.username}'s info`)
-            .setColor(user.displayColor ? user.displayColor : embedConfig.colors.default)
-            .setThumbnail(user.user.avatarURL())
+        if (activity && activity.emoji) activityString = `${activity.emoji.name} ${activityString}`;
+        // Banner
+        if (user.banner) banner = `https://cdn.discordapp.com/banners/${user.id}/${user.banner}.png?size=1024`;
+        // Roles
+        let roleLimit = 15;
+        let roles = [...member.roles.cache.values()].filter(r => r.name != "@everyone").sort((a, b) => b.position - a.position);
+        let sliced = roles.length >= roleLimit ? roles.slice(0, roleLimit - 1) : roles.slice(0, roleLimit);
+        let roleString = "";
+        for (let i = 0; i < sliced.length; i++) {
+            console.log(roles[i])
+            if (i == roles.length - 1) roleString += `<@&${roles[i].id}>`;
+            else roleString += roles[i].toString() + ", ";
+        }
+        if (roles.length >= roleLimit) roleString += ` and ${roles.length - roleLimit} more...`;
+        infoEmbed = new EmbedBuilder()
+            .setTitle(`${member.nickname ? member.nickname : user.username}'s info`)
+            .setColor(member.displayColor ? member.displayColor : embedConfig.colors.default)
+            .setThumbnail(`https://cdn.discordapp.com/avatars/${user.id}/${user.avatar}.png?size=1024`)
             .addFields({
                 name: "User ID",
-                value: user.id,
+                value: member.id,
                 inline: false
             }, {
                 name: "Tag",
-                value: user.user.tag,
+                value: `${user.username}#${user.discriminator}`,
                 inline: true
             }, {
                 name: "Nickname",
-                value: user.nickname ? user.nickname : user.user.username,
+                value: member.nickname ? member.nickname : user.username,
                 inline: true
             }, {
                 name: "Bot?",
-                value: user.user.bot ? "Yes" : "No",
+                value: user.bot ? "Yes" : "No",
                 inline: true
             }, {
                 name: "Presence",
-                value: presences[user.presence.status],
+                value: member.presence ? presences[member.presence.status] : presences["offline"],
                 inline: true
             }, {
                 name: "Status",
                 value: activityString ? activityString : "None",
             }, {
                 name: "Permissions",
-                value: `[${user.permissions.bitfield}](https://discordapi.com/permissions.html#${user.permissions.bitfield})`,
+                value: `[${member.permissions.bitfield}](https://discordapi.com/permissions.html#${member.permissions.bitfield})`,
                 inline: true
             }, {
                 name: "Joined",
-                value: user.joinedAt.toLocaleString(),
+                value: member.joinedAt.toLocaleString(),
+                inline: true
+            }, {
+                name: "Created",
+                value: member.user.createdAt.toLocaleString(),
                 inline: true
             }, {
                 name: "Roles",
-                value: user.roles.cache.map(r => r.name).join(', '),
-                inline: true
-            })
+                value: roleString,
+                inline: false
+            });
+        if (user.banner) infoEmbed.setImage(banner);
+        return infoEmbed;
     },
     songInfoEmbed: (title, color, video) => {
         return new EmbedBuilder()

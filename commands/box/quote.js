@@ -1,12 +1,5 @@
 const { ApplicationCommandType, ApplicationCommandOptionType } = require('discord.js');
-const barry = require('../../pools/quotes/barry.json');
-const gex = require('../../pools/quotes/gex.json');
-const krabs = require('../../pools/quotes/krabs.json');
-const maui = require('../../pools/quotes/maui.json');
-const sans = require('../../pools/quotes/sans.json');
-const papyrus = require('../../pools/quotes/papyrus.json');
-const shrek = require('../../pools/quotes/shrek.json');
-const vector = require('../../pools/quotes/vector.json');
+const pooler = require('../../functions/pooler.js');
 module.exports = {
     name: "quote",
     description: "Get quotes from your favorite characters!",
@@ -30,17 +23,7 @@ module.exports = {
     ],
     type: ApplicationCommandType.ChatInput,
 	execute: async (Discord, bot, interaction, options, subcommand) => {
-        var quote = '';
-        switch (options.character) {
-            case 'quote_barry': quote = barry[Math.floor(Math.random() * barry.length)]; break;
-            case 'quote_gex': quote = gex[Math.floor(Math.random() * gex.length)]; break;
-            case 'quote_krabs': quote = krabs[Math.floor(Math.random() * krabs.length)]; break;
-            case 'quote_maui': quote = maui[Math.floor(Math.random() * maui.length)]; break;
-            case 'quote_sans': quote = sans[Math.floor(Math.random() * sans.length)]; break;
-            case 'quote_papyrus': quote = papyrus[Math.floor(Math.random() * papyrus.length)]; break;
-            case 'quote_shrek': quote = shrek[Math.floor(Math.random() * shrek.length)]; break;
-            case 'quote_vector': quote = vector[Math.floor(Math.random() * vector.length)]; break;
-        };
+        let quote = pooler[options.character.split('_')[1]](interaction.id);
         await interaction.reply({ content: `> "${quote}"` });   
     }
 };

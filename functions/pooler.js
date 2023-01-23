@@ -1,0 +1,26 @@
+const seedrandom = require('seedrandom');
+const logins = require('../pools/start.json');
+const gex = require('../pools/quotes/gex.json');
+const krabs = require('../pools/quotes/krabs.json');
+const maui = require('../pools/quotes/maui.json');
+const sans = require('../pools/quotes/sans.json');
+const papyrus = require('../pools/quotes/papyrus.json');
+const shrek = require('../pools/quotes/shrek.json');
+const vector = require('../pools/quotes/vector.json');
+const ping = require('../pools/ping.json');
+module.exports = {
+    login: (seed) => { return logins[Math.floor(seedrandom(seed)() * logins.length)]; },
+    gex: (seed) => { return gex[Math.floor(seedrandom(seed)() * gex.length)]; },
+    krabs: (seed) => { return krabs[Math.floor(seedrandom(seed)() * krabs.length)]; },
+    maui: (seed) => { return maui[Math.floor(seedrandom(seed)() * maui.length)]; },
+    sans: (seed) => { return sans[Math.floor(seedrandom(seed)() * sans.length)]; },
+    papyrus: (seed) => { return papyrus[Math.floor(seedrandom(seed)() * papyrus.length)]; },
+    shrek: (seed) => { return shrek[Math.floor(seedrandom(seed)() * shrek.length)]; },
+    vector: (seed) => { return vector[Math.floor(seedrandom(seed)() * vector.length)]; },
+    pingGeneral: (seed) => { return ping.general[Math.floor(seedrandom(seed)() * ping.general.length)]; },
+    pingVeryLow: (seed) => { return ping.veryLow[Math.floor(seedrandom(seed)() * ping.veryLow.length)]; },
+    pingLow: (seed) => { return ping.low[Math.floor(seedrandom(seed)() * ping.low.length)]; },
+    pingMedium: (seed) => { return ping.medium[Math.floor(seedrandom(seed)() * ping.medium.length)]; },
+    pingHigh: (seed) => { return ping.high[Math.floor(seedrandom(seed)() * ping.high.length)]; },
+    pingVeryHigh: (seed) => { return ping.veryHigh[Math.floor(seedrandom(seed)() * ping.veryHigh.length)]; },
+}

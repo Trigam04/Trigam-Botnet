@@ -1,4 +1,4 @@
-const logins = require('../../../pools/start.json');
+const pooler = require('../../../functions/pooler.js');
 module.exports = (Discord, bot) => {
-    console.log(`${bot.config.console} ${logins[Math.floor(Math.random() * logins.length)]}`);
+    console.log(`${bot.config.console} ${pooler.login()}`);
 };
