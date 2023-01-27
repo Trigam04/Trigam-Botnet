@@ -1,8 +1,16 @@
 const seedrandom = require('seedrandom');
+const bots = require('../config/bots.js');
 const functions = {
     // Vars
     collectFilter: (m) => m.author.id === interaction.author.id,
     // Functions
+    getMember: (user, interaction) => {
+        var username = user.replace(/_/g, ' ');
+		var user = interaction.guild.members.cache.find(user => user.id == username);
+		if (!user) var user = interaction.guild.members.cache.find(user => user.user.username == username);
+		if (!user) var user = interaction.guild.members.cache.find(user => user.nickname == username);
+		return user ? user : null;
+    },
     nthify: (num, exclude) => {
         switch (Math.abs(Number(num)) % 10) {
             case 1: return exclude ? "st" : num + "st";
@@ -11,6 +19,7 @@ const functions = {
             default: return exclude ? "th" : num + "th";
         }; 
 	},
+    commafy: (num, splitter) => { return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, splitter ? splitter : ","); },
     validURL: (str) => {
         var pattern = new RegExp('^(https?:\\/\\/)?'+ // protocol
             '((([a-z\\d]([a-z\\d-]*[a-z\\d])*)\\.)+[a-z]{2,}|'+ // domain name
@@ -66,5 +75,34 @@ const functions = {
         if (seed) return arr[seedrandom(seed)() * arr.length];
         else return arr[Math.floor(Math.random() * arr.length)];
     },
+    forceFetchUser: async (id) => {
+        let user = await fetch(`https://discord.com/api/v8/users/${options.user}`, {
+            method: 'GET',
+            headers: {
+                Authorization: `Bot ${bots.ToolboxConfig.token}`
+            }
+        }).then(res => res.json());
+        return user;
+    },
+    getRole: (role, interaction) => {
+        let roleObj = interaction.guild.roles.cache.find(gRole => gRole.name.toLowerCase() == role.toLowerCase());
+        if (!roleObj) roleObj = interaction.guild.roles.cache.find(gRole => gRole.id == role);
+        return roleObj ? roleObj : null;
+    },
+    randomMember: (interaction) => {
+        let member = interaction.guild.members.cache.random();
+        return member;
+    },
+    getChannel: (channel, interaction) => {
+        let channelObj = interaction.guild.channels.cache.find(gChannel => gChannel.name.toLowerCase() == channel.toLowerCase());
+        if (!channelObj) channelObj = interaction.guild.channels.cache.find(gChannel => gChannel.id == channel);
+        return channelObj ? channelObj : null;
+    },
+    getMessage: async (channel, message, interaction) => {
+        let channelObj = functions.getChannel(channel, interaction);
+        if (!channelObj) return null;
+        let messageObj = await channelObj.messages.fetch(message);
+        return messageObj ? messageObj : null;
+    }
 };
 module.exports = functions;

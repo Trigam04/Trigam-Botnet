@@ -23,14 +23,12 @@ module.exports = {
         switch (subcommand) {
             case 'user':
                 let member = await interaction.guild.members.fetch(options.user);
-                console.log(options.user)
                 let user = await fetch(`https://discord.com/api/v8/users/${options.user}`, {
                     method: 'GET',
                     headers: {
                         Authorization: `Bot ${bots.ToolboxConfig.token}`
                     }
                 }).then(res => res.json());
-                console.log(user);
                 await interaction.reply({ embeds: [componentBuilder.userInfoEmbed(user, member, interaction.guild)] });
         }
         //await interaction.reply({ content: `${JSON.stringify(options)}` });   

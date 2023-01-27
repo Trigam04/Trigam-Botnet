@@ -1,62 +1,73 @@
 const ut = require('./utilitrigam.js');
 
-module.exports = {
+class Bracketeer {
+    constructor(args, bot, Discord, interaction) {
+        // Input
+        this.args = args;
+        this.bot = bot;
+        this.Discord = Discord;
+        this.interaction = interaction;
+        // Output
+        this.ephemeral = false;
+    };
+
     // MATH/NUMBERS
     // Math (Simple)
-    add: (...nums) => { return nums.reduce((a, b) => Number(a) + Number(b)) },
-    subtract: (...nums) => { return nums.reduce((a, b) => Number(a) - Number(b)) },
-    multiply: (...nums) => { return nums.reduce((a, b) => Number(a) * Number(b)) },
-    divide: (...nums) => { return nums.reduce((a, b) => Number(a) / Number(b)) },
-    modulo: (...nums) => { return nums.reduce((a, b) => Number(a) % Number(b)) },
-    remainder: (...nums) => { return nums.reduce((a, b) => Number(a) % Number(b)) },
-    exponent: (...nums) => { return nums.reduce((a, b) => Number(a) ** Number(b)) },
-    power: (...nums) => { return nums.reduce((a, b) => Number(a) ** Number(b)) },
-    pow: (...nums) => { return nums.reduce((a, b) => Number(a) ** Number(b)) },
-    round: (num) => { return Math.round(Number(num)) },
-    fixed: (num, n) => { return Number.parseFloat(num).toFixed(n) },
-    floor: (num) => { return Math.floor(Number(num)) },
-    ceil: (num) => { return Math.ceil(Number(num)) },
-    precise: (num, places) => { return Number(num).toPrecision(places) },
-    trunc: (num) => { return Math.trunc(Number(num)) },
-    truncate: (num) => { return Math.trunc(Number(num)) },
-    abs: (num) => { return Math.abs(Number(num)) },
-    absolute: (num) => { return Math.abs(Number(num)) },
-    random: (min, max, seed) => { return ut.rng(Number(max ? min : 1), Number(max ? max : min), seed) },
-    rng: (min, max, seed) => { return ut.rng(Number(max ? min : 1), Number(max ? max : min), seed) },
-    // clamp
-    // commafy
-    // nth
-    pi: () => { return Math.PI },
+    add(...nums) { return nums.reduce((a, b) => Number(a) + Number(b)) };
+    subtract (bot, ...nums) { return nums.reduce((a, b) => Number(a) - Number(b)) };
+    multiply (bot, ...nums) { return nums.reduce((a, b) => Number(a) * Number(b)) };
+    divide (bot, ...nums) { return nums.reduce((a, b) => Number(a) / Number(b)) };
+    modulo (bot, ...nums) { return nums.reduce((a, b) => Number(a) % Number(b)) };
+    remainder (bot, ...nums) { return nums.reduce((a, b) => Number(a) % Number(b)) };
+    exponent (bot, ...nums) { return nums.reduce((a, b) => Number(a) ** Number(b)) };
+    power (bot, ...nums) { return nums.reduce((a, b) => Number(a) ** Number(b)) };
+    pow (bot, ...nums) { return nums.reduce((a, b) => Number(a) ** Number(b)) };
+    round (bot, num) { return Math.round(Number(num)) };
+    fixed (bot, num, n) { return Number.parseFloat(num).toFixed(n) };
+    floor (bot, num) { return Math.floor(Number(num)) };
+    ceil (bot, num) { return Math.ceil(Number(num)) };
+    precise (bot, num, places) { return Number(num).toPrecision(places) };
+    trunc (bot, num) { return Math.trunc(Number(num)) };
+    truncate (bot, num) { return Math.trunc(Number(num)) };
+    abs (bot, num) { return Math.abs(Number(num)) };
+    absolute (bot, num) { return Math.abs(Number(num)) };
+    random (bot, min, max, seed) { return ut.rng(Number(max ? min : 1), Number(max ? max : min), seed) };
+    rng (bot, min, max, seed) { return ut.rng(Number(max ? min : 1), Number(max ? max : min), seed) };
+    clamp (bot, num, min, max) { return ut.limit(Number(num), Number(min), Number(max)) };
+    commafy (bot, num, splitter) { return ut.commafy(num, splitter) };
+    nth (bot, num, exclude) { return ut.nthify(num, exclude) };
+    nthify (bot, num, exclude) { return this.nth(num, exclude) };
+    pi (bot) { return Math.PI };
     // Math (logic)
-    //and: (...nums) => { return ut.bitwise('and', nums) },
-    //or: (...nums) => { return ut.bitwise('or', nums) },
-    //xor: (...nums) => { return ut.bitwise('xor', nums) },
-    //not: (...nums) => { return ut.bitwise('not', nums) },
-    /*bit: (num1, operator, num2) => {
+    //and (bot, ...nums) { return ut.bitwise('and', nums) };
+    //or (bot, ...nums) { return ut.bitwise('or', nums) };
+    //xor (bot, ...nums) { return ut.bitwise('xor', nums) };
+    //not (bot, ...nums) { return ut.bitwise('not', nums) };
+    /*bit (bot, num1, operator, num2) {
         switch (operator) {
             case 'and': return ut.bitwise('and', [ num1, num2 ]);
             case 'or': return ut.bitwise('or', [ num1, num2 ]);
             case 'xor': return ut.bitwise('xor', [ num1, num2 ]);
             case 'not': return ut.bitwise('not', [ num1 ]);
         };
-    },*/
-    /*bbit: (num1, operator, num2) => {
+    };*/
+    /*bbit (bot, num1, operator, num2) {
         switch (operator) {
             case 'and': return ut.bitwise('and', [ num1, num2 ], true);
             case 'or': return ut.bitwise('or', [ num1, num2 ], true);
             case 'xor': return ut.bitwise('xor', [ num1, num2 ], true);
             case 'not': return ut.bitwise('not', [ num1 ], true);
         };
-    },*/
-    lessthan: (num1, num2, orEqual) => { return orEqual ? Number(num1 < num2 || num1 == num2).toString() : Number(num1 < num2).toString() },
-    less: (num1, num2, orEqual) => { return orEqual ? Number(num1 < num2 || num1 == num2).toString() : Number(num1 < num2).toString() },
-    greaterthan: (num1, num2, orEqual) => { return orEqual ? Number(num1 > num2 || num1 == num2).toString() : Number(num1 > num2).toString() },
-    greater: (num1, num2, orEqual) => { return orEqual ? Number(num1 > num2 || num1 == num2).toString() : Number(num1 > num2).toString() },
-    equalto: (num1, num2) => { return Number(num1 === num2).toString() },
-    equal: (num1, num2) => { return Number(num1 === num2).toString() },
+    };*/
+    lessthan (bot, num1, num2, orEqual) { return orEqual ? Number(num1 < num2 || num1 == num2).toString() : Number(num1 < num2).toString() };
+    less (bot, num1, num2, orEqual) { return orEqual ? Number(num1 < num2 || num1 == num2).toString() : Number(num1 < num2).toString() };
+    greaterthan (bot, num1, num2, orEqual) { return orEqual ? Number(num1 > num2 || num1 == num2).toString() : Number(num1 > num2).toString() };
+    greater (bot, num1, num2, orEqual) { return orEqual ? Number(num1 > num2 || num1 == num2).toString() : Number(num1 > num2).toString() };
+    equalto (bot, num1, num2) { return Number(num1 === num2).toString() };
+    equal (bot, num1, num2) { return Number(num1 === num2).toString() };
     // Math (complex)
-    sqrt: (num) => { return Math.sqrt(Number(num)) },
-    root: (num, root) => { return ut.root(Number(num), Number(root)) },
+    sqrt (bot, num) { return Math.sqrt(Number(num)) };
+    root (bot, num, root) { return ut.root(Number(num), Number(root)) };
     // log
     // logbase
     // base
@@ -73,19 +84,81 @@ module.exports = {
     // tanh
     // atan
     // atanh
+
+    // User
+    async user(user, property, ...properties) {
+        if (!user) user = this.interaction.user.id;
+        let member = ut.getMember(user, this.interaction);
+        if (!member) { properties.unshift(user); user = this.interaction.user.id; member = ut.getMember(user, this.interaction); }
+        if (!user || !member) return 'Invalid user!';
+        if (property == 'banner') member = ut.forceFetchUser(member.user.id);
+        console.log(user, property, properties)
+        switch (property) {
+            case '@':
+            case 'mention': {
+                if (properties[0] == 'here') return '@here';
+                if (properties[0] == 'everyone') return '@everyone';
+                if (properties[0] == 'random' || properties[0] == 'someone') return `<@${ut.randomMember(this.interaction).user.id}>`;
+                return member.user.toString();
+            };
+            case 'name':
+            case 'username': return member.user.username;
+            case 'tag': return member.user.tag;
+            case 'nick':
+            case 'nickname': return member.nickname ? member.nickname : member.user.username;
+            case 'discrim':
+            case 'discriminator': return member.user.discriminator;
+            case 'id': return member.user.id;
+            case 'bot': return member.user.bot;
+            case 'avatar': return member.user.displayAvatarURL({ dynamic: true, size: 2048 });
+            case 'hasrole': {
+                if (!properties[0]) return 'Invalid role!';
+                if (properties[0].toLowerCase() == 'everyone') return true;
+                let role = ut.getRole(properties[0], this.interaction);
+                if (!role) return 'Invalid role!';
+                return member.roles.cache.has(role.id);
+            };
+        };
+    };
+    '@' (user) { return this.user(user, '@') };
+    mention (user) { return this.user(user, 'mention') };
+    name (user) { return this.user(user, 'name') };
+    username (user) { return this.user(user, 'username') };
+    tag (user) { return this.user(user, 'tag') };
+    nick (user) { return this.user(user, 'nick') };
+    nickname (user) { return this.user(user, 'nickname') };
+    discrim (user) { return this.user(user, 'discrim') };
+    discriminator (user) { return this.user(user, 'discriminator') };
+    id (user) { return this.user(user, 'id') };
+    bot (user) { return this.user(user, 'bot') };
+    avatar (user) { return this.user(user, 'avatar') };
+    hasrole (user, role) { return this.user(user, 'hasrole', role) };
+    randomuser () { return ut.randomMember(this.interaction).user.id };
+    // Bot User
+    client (property, ...properties) { return this.user(this.bot.user.id, property, ...properties) };
+
+    // Functions
+    send (channel, content) {
+        this.ephemeral = true;
+        let fetchedChannel = ut.getChannel(channel, this.interaction);
+        if (!fetchedChannel) return "Invalid channel!";
+        fetchedChannel.send({ content: content })
+        return "Sent message!";
+    };
+    async reply (channel, message, content) {
+        this.ephemeral = true;
+        let fetchedMessage = await ut.getMessage(channel, message, this.interaction);
+        if (!fetchedMessage) return "Invalid message!";
+        fetchedMessage.reply({ content: content })
+        return "Replied to message!";
+    };
 };
+
+module.exports = Bracketeer;
 
 
 /*
 ?--| USER |--
-{username} / {name}
-{tag}
-{@} / {mention}
-{nickname} / {nick}
-{discrim} / {discriminator}
-{id}
-{bot}
-{avatar}
 {roles} / {hasroles} / {hasrole}
 {color} / {colour} / {rolecolor} / {rolecolour}
 {status}

@@ -1,12 +1,13 @@
 const { ApplicationCommandType } = require("discord.js");
 const pooler = require("../../functions/pooler.js");
+const bracketeer = require('../../functions/bracketeer.js');
 module.exports = {
     name: "ping",
     description: "Responds with the ping of the bot!",
     type: ApplicationCommandType.ChatInput,
 	execute: async (Discord, bot, interaction, options, subcommand) => {
         let sent = await interaction.reply({ content: "Pinging...", fetchReply: true });
-        let latency = Math.abs(Date.now() - sent.createdTimestamp);
+        let latency = sent.createdTimestamp - interaction.createdTimestamp;
         var response = "...";
         let general = Math.floor(Math.random() * 2) == 1;
         switch (!general) {
@@ -16,7 +17,8 @@ module.exports = {
             case latency < 1500: response = pooler.pingHigh(); break;
             case latency > 1500: response = pooler.pingVeryHigh(); break;
         };
-        if (general) response = pooler.pingGeneral();
-        await interaction.editReply({ content: `**${response}**\nLatency: \`${latency} ms\`\nWebsocket Latency: \`${bot.ws.ping} ms\`` });
+        response = pooler.pingGeneral();
+        response = await bracketeer(response, null, {loopLimit: 500}, bot, Discord, interaction);
+        await interaction.editReply({ content: `**${response[0]}**\nLatency: \`${latency} ms\`\nWebsocket Latency: \`${bot.ws.ping} ms\`` });
     }
 };

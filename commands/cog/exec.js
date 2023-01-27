@@ -24,7 +24,7 @@ module.exports = {
     type: ApplicationCommandType.ChatInput,
 	execute: async (Discord, bot, interaction, options, subcommand) => {
         let coded = await bracketeer(options.code, options.args, {loopLimit: 500, devMode: options.debug}, bot, Discord, interaction);
-        try { await interaction.reply({ content: coded.toString() }); }
+        try { await interaction.reply({ content: coded[0].toString(), ephemeral: coded[1].ephemeral }); }
         catch (e) { console.error(e); }
     }
 };
