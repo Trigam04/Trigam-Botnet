@@ -1,12 +1,13 @@
 const ut = require('./utilitrigam.js');
 
 class Bracketeer {
-    constructor(args, bot, Discord, interaction) {
+    constructor(argsArr, bot, Discord, interaction) {
         // Input
-        this.args = args;
+        this.argsArr = argsArr;
         this.bot = bot;
         this.Discord = Discord;
         this.interaction = interaction;
+        this.vars = [];
         // Output
         this.ephemeral = false;
     };
@@ -89,28 +90,33 @@ class Bracketeer {
     async user(user, property, ...properties) {
         if (!user) user = this.interaction.user.id;
         let member = ut.getMember(user, this.interaction);
-        if (!member) { properties.unshift(user); user = this.interaction.user.id; member = ut.getMember(user, this.interaction); }
+        // if member is null, set user to the interaction user, set property to the user, and shift properties and add property to it
+        if (!member) {
+            properties.unshift(property);
+            property = user;
+            user = this.interaction.user.id;
+            member = ut.getMember(user, this.interaction);
+        };
         if (!user || !member) return 'Invalid user!';
-        if (property == 'banner') member = ut.forceFetchUser(member.user.id);
-        console.log(user, property, properties)
+        if (property == 'banner') var fetchedMember = await ut.forceFetchUser(member.user.id);
         switch (property) {
             case '@':
             case 'mention': {
                 if (properties[0] == 'here') return '@here';
                 if (properties[0] == 'everyone') return '@everyone';
                 if (properties[0] == 'random' || properties[0] == 'someone') return `<@${ut.randomMember(this.interaction).user.id}>`;
-                return member.user.toString();
+                return member.user.toString() || '<@0>';
             };
             case 'name':
-            case 'username': return member.user.username;
-            case 'tag': return member.user.tag;
+            case 'username': return member.user.username || 'Unknown';
+            case 'tag': return member.user.tag || 'Unknown#0000';
             case 'nick':
-            case 'nickname': return member.nickname ? member.nickname : member.user.username;
+            case 'nickname': return member.nickname ? member.nickname : member.user.username || 'Unknown';
             case 'discrim':
-            case 'discriminator': return member.user.discriminator;
-            case 'id': return member.user.id;
-            case 'bot': return member.user.bot;
-            case 'avatar': return member.user.displayAvatarURL({ dynamic: true, size: 2048 });
+            case 'discriminator': return member.user.discriminator || '0000';
+            case 'id': return member.user.id || 0;
+            case 'bot': return member.user.bot || false;
+            case 'avatar': return member.user.displayAvatarURL({ dynamic: true, size: 2048 }) || 'https://cdn.discordapp.com/embed/avatars/0.png';
             case 'hasrole': {
                 if (!properties[0]) return 'Invalid role!';
                 if (properties[0].toLowerCase() == 'everyone') return true;
@@ -118,6 +124,59 @@ class Bracketeer {
                 if (!role) return 'Invalid role!';
                 return member.roles.cache.has(role.id);
             };
+            case 'roles': return member.roles.cache.size || 0;
+            case 'color':
+            case 'colour':
+            case 'rolecolor':
+            case 'rolecolour': return member.displayHexColor || "#000000";
+            case 'status': return member.presence.status || 'offline';
+            case 'activity': {
+                if (member.presence) {
+                    let activity = member.presence.activities[0];
+                    return activity ? activity.name : 'None';
+                } else return "None";
+            };
+            case 'hasperm':
+            case 'haspermission': return ut.memberHasPerm(member, properties[0]);
+            case 'perms':
+            case 'permissions': return member.permissions.bitfield;
+            case 'joined':
+            case 'joinedat': {
+                let unit = properties[0] || 'millis';
+                let date = member.joinedAt.getTime() / 1000 || 0;
+                return ut.unitsSince(date, unit);
+            };
+            case 'created':
+            case 'createdat': {
+                let unit = properties[0] || 'millis';
+                let date = member.user.createdAt.getTime() / 1000 || 0;
+                return ut.unitsSince(date, unit);
+            };
+            case 'bannable': return member.bannable;
+            case 'kickable': return member.kickable;
+            case 'banner': {
+                let banner = `https://cdn.discordapp.com/banners/${member.user.id}/${fetchedMember.banner}.png?size=1024`
+                return fetchedMember.banner ? banner : 'No Banner!';
+            };
+            case 'userrole': {
+                if (!properties[0]) return 'Invalid property!';
+                let roleList = Array.from(member.roles.cache.values());
+                if (roleList.length == 1) return 'None';
+                let posSort = roleList.sort((a, b) => b.position - a.position);
+                let role;
+                switch (properties[0]) {
+                    case 'highest': role = member.roles.highest || 'None'; break;
+                    case 'lowest': role = posSort[posSort.length - 2] || 'None'; break;
+                    case 'color': role = member.roles.color || 'None'; break;
+                    case 'hoist': role = member.roles.hoist || 'None'; break;
+                    case 'random': role = ut.randomArray(posSort, 1)[0] || 'None'; break;
+                    default: return 'Invalid property!';
+                };
+                if (role == 'None') return 'None';
+                if (properties[1]) return this.role(role, properties[1], ...properties.slice(2));
+                else return role.id || 0;
+            };
+            default: return member.user.username;
         };
     };
     '@' (user) { return this.user(user, '@') };
@@ -133,9 +192,62 @@ class Bracketeer {
     bot (user) { return this.user(user, 'bot') };
     avatar (user) { return this.user(user, 'avatar') };
     hasrole (user, role) { return this.user(user, 'hasrole', role) };
+    roles (user) { return this.user(user, 'roles') };
+    color (user) { return this.user(user, 'color') };
+    colour (user) { return this.user(user, 'colour') };
+    rolecolor (user) { return this.user(user, 'rolecolor') };
+    rolecolour (user) { return this.user(user, 'rolecolour') };
+    status (user) { return this.user(user, 'status') };
+    activity (user) { return this.user(user, 'activity') };
+    hasperm (user, perm) { return this.user(user, 'hasperm', perm) };
+    haspermission (user, perm) { return this.user(user, 'haspermission', perm) };
+    perms (user) { return this.user(user, 'perms') };
+    permissions (user) { return this.user(user, 'permissions') };
+    joined (user) { return this.user(user, 'joined') };
+    joinedat (user) { return this.user(user, 'joinedat') };
+    created (user) { return this.user(user, 'created') };
+    createdat (user) { return this.user(user, 'createdat') };
+    bannable (user) { return this.user(user, 'bannable') };
+    kickable (user) { return this.user(user, 'kickable') };
+    banner (user) { return this.user(user, 'banner') };
+    userrole (user, property) { return this.user(user, 'user role', property) };
+    role (role, property, ...properties) {
+        role = ut.getRole(role, this.interaction);
+        if (!role) return "Invalid role!";
+        switch (property) {
+            case 'name': return role.name;
+            case 'id': return role.id;
+            case 'color':
+            case 'colour': return role.hexColor;
+            case 'position': return role.position;
+            case 'members': return role.members.size;
+            case '@':
+            case 'mention': return role.toString();
+            case 'created':
+            case 'createdat': {
+                let unit = properties[0] || 'millis';
+                let date = role.createdAt.getTime() / 1000 || 0;
+                return ut.unitsSince(date, unit);
+            };
+            case 'hoist':
+            case 'hoisted': return role.hoist;
+            case 'managed': return role.managed;
+            case 'mentionable': return role.mentionable;
+            case 'permissions':
+            case 'perms': return role.permissions.bitfield;
+            default: return role.name;
+        };
+    }
+    // User funcs
     randomuser () { return ut.randomMember(this.interaction).user.id };
     // Bot User
     client (property, ...properties) { return this.user(this.bot.user.id, property, ...properties) };
+    // Utility
+    args (index) { return this.argsArr ? this.argsArr[index] : null };
+    var (name, val) {
+        if (val) { this.vars[name] = val; return '' };
+        return this.vars[name];
+    }
 
     // Functions
     send (channel, content) {
@@ -158,18 +270,6 @@ module.exports = Bracketeer;
 
 
 /*
-?--| USER |--
-{roles} / {hasroles} / {hasrole}
-{color} / {colour} / {rolecolor} / {rolecolour}
-{status}
-{activity}
-{permission} / {permissions} / {perms} / {perm}
-{joined} / {joinedat}
-{created} / {createdat} / {timestamp}
-{bannable}
-{kickable}
-{nitro}
-{role| highest, lowest, color, hoist, random }
 
 ?--| SERVER |--
 {server|name}
@@ -260,22 +360,11 @@ module.exports = Bracketeer;
 {message|webhook}
 
 ?--| ROLE |--
-{role|name}
-{role|id}
-{role|tag}
-{role|color} / {role|colour}
-{role|position}
 {role|rawposition}
-{role|hoisted}
-{role|mentionable}
 {role|external}
-{role|created} / {role|createdat} / {role|timestamp}
 {role|editable}
-{role|server} / {role|guild}
 {role|icon}
 {role|managed}
-{role|members}
-{role|permissions} / {role|perms}
 {role|emoji} / {role|emote} / {role|unicodeemoji} / {role|unicodeemote} / {role|unicode}
 
 ?--| TEXT |--
@@ -301,26 +390,6 @@ module.exports = Bracketeer;
 {slice| [string] | [start] | [end] }
 
 ?--| NUMBERS |--
---| Simple |--
-{add| [nums] }
-{subtract| [nums] } / {sub| [nums] }
-{multiply| [nums] } / {mult| [nums] }
-{divide| [nums] } / {div| [nums] }
-{modulo| [nums] } / {mod| [nums] }
-{remainder| [nums] } / {rem| [nums] }
-{exponent| [nums] } / {power| [nums] } / {pow| [nums] }
-{round| [num] }
-{fixed| [num] | [digits] }
-{floor| [num] }
-{ceil| [num] }
-{precise| [num] | [digits] }
-{truncate| [num] | [digits] } / {trunc| [num] | [digits] }
-{absolute| [num] } / {abs| [num] }
-{random| [min] | [max] | [seed] } / {rand| [min] | [max] | [seed] } / {rng| [min] | [max] | [seed] }
-{clamp| [num] | [min] | [max] }
-{commafy| [num] }
-{nth| [num] | [exclude?] } / {nthify| [num] | [exclude?]} / {ordinal| [num] | [exclude?] } / {ord| [num] | [exclude?] }
-{pi}
 --| Logic |--
 {and| [nums] }
 {or| [nums] }
@@ -328,8 +397,6 @@ module.exports = Bracketeer;
 {not| [num] }
 {bit| [num1] | [operator] | [num2] }
 {bbit| [num1] | [operator] | [num2] }
-{lessthan| [num1] | [num2] | [or equal?] }
-{greaterthan| [num1] | [num2] | [or equal?] }
 --| Complex |--
 {sqrt| [num] }
 {root| [num] | [root] }

@@ -1,5 +1,6 @@
 const seedrandom = require('seedrandom');
 const bots = require('../config/bots.js');
+const permissions = require('../types/permission.js');
 const functions = {
     // Vars
     collectFilter: (m) => m.author.id === interaction.author.id,
@@ -76,7 +77,7 @@ const functions = {
         else return arr[Math.floor(Math.random() * arr.length)];
     },
     forceFetchUser: async (id) => {
-        let user = await fetch(`https://discord.com/api/v8/users/${options.user}`, {
+        let user = await fetch(`https://discord.com/api/v8/users/${id}`, {
             method: 'GET',
             headers: {
                 Authorization: `Bot ${bots.ToolboxConfig.token}`
@@ -103,6 +104,56 @@ const functions = {
         if (!channelObj) return null;
         let messageObj = await channelObj.messages.fetch(message);
         return messageObj ? messageObj : null;
+    },
+    memberHasPerm: (user, perm) => {
+        if (perm.startsWith('0x')) try { return user.permissions.has(perm); } catch { return false; };
+        perm = perm.toLowerCase().replace(/ /g, '_');
+		let matched = permissions[perm];
+        if (!matched) return false;
+        else try { return user.permissions.has(matched); } catch { return false; };
+	},
+    unitsSince: (unix, unit) => {
+		let now = new Date();
+		let then = new Date(unix * 1000);
+		let difference = now.getTime() - then.getTime();
+		if (!unix || !unit) return null;
+		switch (unit) {
+			case 'milliseconds':
+			case 'millisecond':
+            case 'millis': return difference;
+			case 'seconds':
+			case 'second': return Math.floor(difference / 1000)
+			case 'minutes':
+			case 'minute': return Math.floor(difference / (1000 * 60));
+			case 'hours':
+			case 'hour': return Math.floor(difference / (1000 * 60 * 60));
+			case 'days':
+			case 'day': return Math.floor(difference / (1000 * 60 * 60 * 24));
+			case 'weeks':
+			case 'week': return Math.floor(difference / (1000 * 60 * 60 * 24 * 7));
+			case 'months':
+			case 'month': return Math.floor(difference / (1000 * 60 * 60 * 24 * 7 * 4.34524));
+			case 'years':
+			case 'year': return Math.floor(difference / (1000 * 60 * 60 * 24 * 7 * 4.34524 * 12));
+			case 'decades':
+			case 'decade': return Math.floor(difference / (1000 * 60 * 60 * 24 * 7 * 4.34524 * 12 * 10));
+			case 'centuries':
+			case 'century': return Math.floor(difference / (1000 * 60 * 60 * 24 * 7 * 4.34524 * 12 * 10 * 100));
+			case 'milleniums':
+			case 'millenium': return Math.floor(difference / (1000 * 60 * 60 * 24 * 7 * 4.34524 * 12 * 10 * 100 * 10));
+		};
+    },
+    randomArray: (arr, amount) => {
+        let newArr = [];
+        for (let i = 0; i < amount; i++) {
+            newArr.push(arr[Math.floor(Math.random() * arr.length)]);
+        };
+        return newArr;
+    },
+    getRole: (role, interaction) => {
+        let roleObj = interaction.guild.roles.cache.find(gRole => gRole.name.toLowerCase() == role.toLowerCase());
+        if (!roleObj) roleObj = interaction.guild.roles.cache.find(gRole => gRole.id == role);
+        return roleObj ? roleObj : null;
     }
 };
 module.exports = functions;
