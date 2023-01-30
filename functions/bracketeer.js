@@ -6,8 +6,8 @@ module.exports = execute;
 var devSteps = [];
 
 // Execute the substitution whenever there's changes to be made 
-async function execute(input, args = {}, config = {}, bot, Discord, interaction) {
-    const bracketeer = new Bracketeer(args, bot, Discord, interaction);
+async function execute(input, argsArr = [], config = {}, bot, Discord, interaction) {
+    const bracketeer = new Bracketeer(argsArr, bot, Discord, interaction);
     devSteps = [];
     var loopLimit = config.loopLimit || 500;
     var previous = "", code = input;
@@ -28,8 +28,12 @@ async function execute(input, args = {}, config = {}, bot, Discord, interaction)
 async function substitute(inputCode, bracketeer) {
     return await replaceAsync(inputCode, /{[^{]+?}/g, async substring => {
         substring = substring.slice(1, -1).split("|");
-        if (typeof bracketeer[substring[0]] == 'function') return await bracketeer[substring[0]](...substring.slice(1));
-        else return gvars[substring[0]] || `{${substring.join('|')}}`;
+        if (typeof await bracketeer[substring[0]] == 'function') var result = await bracketeer[substring[0]](...substring.slice(1));
+        if (result != undefined) return result;
+        else if (substring[0] == '__proto__') return "Invalid variable name!";
+        else if (gvars[substring[0]]) return gvars[substring[0]];
+        else if (bracketeer.vars[substring[0]]) return bracketeer.vars[substring[0]];
+        else return `{${substring.join('|')}}`;
     });
 };
 
