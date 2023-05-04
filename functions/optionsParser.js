@@ -1,7 +1,5 @@
-module.exports = (hoistedOptions) => {
+module.exports = (hoisted) => {
     var options = {};
-    hoistedOptions.forEach(option => {
-        options[option.name] = option.value;
-    });
+    for (let i = 0; i < hoisted.length; i++) options[hoisted[i].name] = hoisted[i].value;
     return options;
 }
