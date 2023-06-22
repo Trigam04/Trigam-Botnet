@@ -522,10 +522,26 @@ class Bracketeer {
     regexreplace (string, expression, replace) { return string.replace(new RegExp(expression, 'g'), replace) };
 
     // List
+    params (list, splitter) { return list.split(splitter).join('|') };
     choose (...list) { return list[Math.floor(Math.random() * list.length)] };
+    multichoose (results, splitter, ...list) {
+        let chosen = [];
+        let newList = list;
+        for (let i = 0; i < results; i++) {
+            let item = newList[Math.floor(Math.random() * newList.length)];
+            chosen.push(item);
+            newList = newList.filter(i => i !== item);
+            if (newList.length === 0) newList = list;
+        }
+        return chosen.join(splitter);
+    };
+    empty (...list) { return list.find(i => i) || '' };
 
     // Utility
-    args (index) { return this.argsArr ? this.argsArr[index] : null };
+    args (index) {
+        if (!index) return this.argsArr ? this.argsArr.join(' ') : '';
+        return this.argsArr ? this.argsArr[index] : ''
+    };
     var (name, val) {
         if (val) { this.vars[name] = val; return '' };
         return this.vars[name];
@@ -634,9 +650,6 @@ module.exports = Bracketeer;
 {atanh| [num] }
 
 ?--| LISTS |--?
-{multichoose| [num results] | [splitter] | [list] }
-{params| [string] | [splitter] }
-{empty| [list] }
 {before| [num] | [splitter] | [list] }
 {after| [num] | [splitter] | [list] }
 {diff| [list1] | [list2] | [splitter] | [joiner] } / {difference| [list1] | [list2] | [splitter] | [joiner] }
