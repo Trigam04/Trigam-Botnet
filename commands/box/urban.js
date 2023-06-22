@@ -7,6 +7,7 @@ const errors = require('../../config/errors.js');
 module.exports = {
     name: "urban",
     description: "Search a term straight from Urban Dictionary!",
+    enabled: true,
     options: [
         {
             type: ApplicationCommandOptionType.String,
@@ -18,13 +19,16 @@ module.exports = {
     type: ApplicationCommandType.ChatInput,
 	execute: async (Discord, bot, interaction, options, subcommand) => {
         let search = await fetch(`https://api.urbandictionary.com/v0/define?term=${options.term}`).then(res => res.json());
-        if (!search.list[0]) return interaction.reply({ embeds: [ errorBuilder(errors.noUrbanResults ) ] });
+        // No results
+        if (!search.list[0]) return interaction.reply(errorBuilder(errors.noUrbanResults ));
+        // One result
         if (!search.list[1]) {
             return await interaction.reply({
                 embeds: [ componentBuilder.definitionEmbed(Discord, bot, search.list[0]) ],
                 components: [ componentBuilder.definitionButtons(Discord, bot, search.list[0]) ]
             }); 
         } else {
+        // Multiple results
             await interaction.reply({
                 components: [ componentBuilder.definitionDropdown(Discord, bot, search.list) ]
             });

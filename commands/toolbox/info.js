@@ -1,10 +1,11 @@
 const { ApplicationCommandType, ApplicationCommandOptionType, EmbedBuilder } = require('discord.js');
 const componentBuilder = require('../../functions/componentBuilder.js');
-const fetch = (...args) => import('node-fetch').then(({default: fetch}) => fetch(...args));
+const ut = require('../../functions/utilitrigam.js');
 const bots = require('../../config/bots.js');
 module.exports = {
     name: "info",
     description: "Gives information about a variety of things!",
+    enabled: true,
     options: [{
             type: ApplicationCommandOptionType.Subcommand,
             name: 'user',
@@ -23,12 +24,7 @@ module.exports = {
         switch (subcommand) {
             case 'user':
                 let member = await interaction.guild.members.fetch(options.user);
-                let user = await fetch(`https://discord.com/api/v8/users/${options.user}`, {
-                    method: 'GET',
-                    headers: {
-                        Authorization: `Bot ${bots.ToolboxConfig.token}`
-                    }
-                }).then(res => res.json());
+                let user = await ut.forceFetchUser(options.user, bot);
                 await interaction.reply({ embeds: [componentBuilder.userInfoEmbed(user, member, interaction.guild)] });
         }
         //await interaction.reply({ content: `${JSON.stringify(options)}` });   

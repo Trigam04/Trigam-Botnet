@@ -3,6 +3,7 @@ const bracketeer = require('../../functions/bracketeer.js');
 module.exports = {
     name: "exec",
     description: "Execute custom command code!",
+    enabled: true,
     options: [
         {
             type: ApplicationCommandOptionType.String,
@@ -24,7 +25,9 @@ module.exports = {
     type: ApplicationCommandType.ChatInput,
 	execute: async (Discord, bot, interaction, options, subcommand) => {
         let coded = await bracketeer(options.code, options.args ? options.args.split(',') : null, {loopLimit: 500, devMode: options.debug}, bot, Discord, interaction);
-        try { await interaction.reply({ content: coded[0].toString(), ephemeral: coded[1].ephemeral }); }
+        let fixed = coded[0].toString().substring(0, 2000);
+        if (fixed.length <= 0) fixed = "Cannot send empty message!";
+        try { await interaction.reply({ content: fixed, ephemeral: coded[1].ephemeral }); }
         catch (e) { console.error(e); }
     }
 };

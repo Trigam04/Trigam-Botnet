@@ -8,6 +8,7 @@ module.exports = (bot, Discord) => {
     const commandFiles = fs.readdirSync(`./commands/${bot.config.id}/`).filter(file => file.endsWith('.js'));
     for (const file of commandFiles) {
         const command = require(`../commands/${bot.config.id}/${file}`);
+        if (command.enabled == false) continue;
         bot.commands.set(command.name, command);
         commands.push(command);
     };

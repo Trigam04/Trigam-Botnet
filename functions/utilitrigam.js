@@ -1,16 +1,56 @@
 const seedrandom = require('seedrandom');
 const bots = require('../config/bots.js');
 const permissions = require('../types/permission.js');
+const colors = require('../types/color.js');
 const functions = {
     // Vars
     collectFilter: (m) => m.author.id === interaction.author.id,
     // Functions
-    getMember: (user, interaction) => {
-        var username = user.replace(/_/g, ' ');
-		var user = interaction.guild.members.cache.find(user => user.id == username);
-		if (!user) var user = interaction.guild.members.cache.find(user => user.user.username == username);
-		if (!user) var user = interaction.guild.members.cache.find(user => user.nickname == username);
-		return user ? user : null;
+    // Getters/fetchers
+    getMember: (user, interaction, bot) => {
+        var username = user.toLowerCase();
+		var found = bot.users.cache.find(user => user.id == username);
+        // Get user
+		if (!found) found = bot.users.cache.find(user => user.username.toLowerCase() == username);
+		if (!found) found = interaction.guild.members.cache.find(member => member.nickname?.toLowerCase() == username);
+        // Convert to member
+        if (found) found = interaction.guild.members.cache.find(member => member.id == found.id);
+        return found ? found : null;
+    },
+    getRole: (role, interaction) => {
+        let roleObj = interaction.guild.roles.cache.find(gRole => gRole.name.toLowerCase() == role.toLowerCase());
+        if (!roleObj) roleObj = interaction.guild.roles.cache.find(gRole => gRole.id == role);
+        return roleObj ? roleObj : null;
+    },
+    getChannel: (channel, interaction) => {
+        let channelObj = interaction.guild.channels.cache.find(gChannel => gChannel.name.toLowerCase() == channel.toLowerCase());
+        if (!channelObj) channelObj = interaction.guild.channels.cache.find(gChannel => gChannel.id == channel);
+        return channelObj ? channelObj : null;
+    },
+    getMessage: async (channel, message, interaction) => {
+        let channelObj = functions.getChannel(channel, interaction);
+        if (!channelObj) return null;
+        let messageObj = await channelObj.messages.fetch(message);
+        return messageObj ? messageObj : null;
+    },
+    fetchURL: async (url) => {
+        let response = await fetch(url);
+        let data = await response.json();
+        return data;
+    },
+    forceFetchUser: async (id) => {
+        let user = await fetch(`https://discord.com/api/v8/users/${id}`, {
+            method: 'GET',
+            headers: {
+                Authorization: `Bot ${bots.ToolboxConfig.token}`
+            }
+        }).then(res => res.json());
+        return user;
+    },
+    getColor: (name) => {
+        name = name.replace(/ /g, '').toLowerCase();
+        let color = colors.find(color => color.names.includes(name));
+        return color ? color : null;
     },
     nthify: (num, exclude) => {
         switch (Math.abs(Number(num)) % 10) {
@@ -40,11 +80,6 @@ const functions = {
     repeat: (text, num) => { if (!isNaN(Number(num)) && num !== undefined) return text.repeat(functions.limit(Number(num), 0, 500)); else return ''; },
     limit: (number, min = 0, max = 4294967296) => { return number < min ? min : number > max ? max : number; },
     unurban: (str, remove) => { return str.replace(/\[/g, remove ? '' : '__').replace(/\]/g, remove ? '' : '__') },
-    fetchURL: async (url) => {
-        let response = await fetch(url);
-        let data = await response.json();
-        return data;
-    },
     rng: (min, max) => { return min + Math.floor(Math.random() * ((max + 1) - min)) },
     root: (x, n) => { return (((x > 1 || x < -1) && n == 0) ? Infinity : ((x > 0 || x < 0) && n == 0) ? 1 : (x < 0 && n % 2 == 0) ? `${((x < 0 ? -x : x) ** (1 / n))}${"i"}` : (n == 3 && x < 0) ? -Math.cbrt(-x) : (x < 0) ? -((x < 0 ? -x : x) ** (1 / n)) : (n == 3 && x > 0 ? Math.cbrt(x) : (x < 0 ? -x : x) ** (1 / n))); },
     bitwise: (operator, nums, binary) => {
@@ -73,37 +108,13 @@ const functions = {
         if (outline) ctx.strokeText(text, x, y);
     },
     randomElem: (arr, seed) => {
-        if (seed) return arr[seedrandom(seed)() * arr.length];
+        // get random element with seedrandom if seed is provided
+        if (seed) return arr[Math.floor(seedrandom(seed).quick() * arr.length)];
         else return arr[Math.floor(Math.random() * arr.length)];
-    },
-    forceFetchUser: async (id) => {
-        let user = await fetch(`https://discord.com/api/v8/users/${id}`, {
-            method: 'GET',
-            headers: {
-                Authorization: `Bot ${bots.ToolboxConfig.token}`
-            }
-        }).then(res => res.json());
-        return user;
-    },
-    getRole: (role, interaction) => {
-        let roleObj = interaction.guild.roles.cache.find(gRole => gRole.name.toLowerCase() == role.toLowerCase());
-        if (!roleObj) roleObj = interaction.guild.roles.cache.find(gRole => gRole.id == role);
-        return roleObj ? roleObj : null;
     },
     randomMember: (interaction) => {
         let member = interaction.guild.members.cache.random();
         return member;
-    },
-    getChannel: (channel, interaction) => {
-        let channelObj = interaction.guild.channels.cache.find(gChannel => gChannel.name.toLowerCase() == channel.toLowerCase());
-        if (!channelObj) channelObj = interaction.guild.channels.cache.find(gChannel => gChannel.id == channel);
-        return channelObj ? channelObj : null;
-    },
-    getMessage: async (channel, message, interaction) => {
-        let channelObj = functions.getChannel(channel, interaction);
-        if (!channelObj) return null;
-        let messageObj = await channelObj.messages.fetch(message);
-        return messageObj ? messageObj : null;
     },
     memberHasPerm: (user, perm) => {
         if (perm.startsWith('0x')) try { return user.permissions.has(perm); } catch { return false; };
@@ -150,10 +161,61 @@ const functions = {
         };
         return newArr;
     },
-    getRole: (role, interaction) => {
-        let roleObj = interaction.guild.roles.cache.find(gRole => gRole.name.toLowerCase() == role.toLowerCase());
-        if (!roleObj) roleObj = interaction.guild.roles.cache.find(gRole => gRole.id == role);
-        return roleObj ? roleObj : null;
+    serverFileSizeLimit: (interaction) => {
+        let guild = interaction.guild;
+        let limit = 8;
+        switch (guild.premiumTier) {
+            case 2: limit = 50; break;
+            case 3: limit = 100; break;
+        };
+        return limit;
+    },
+    serverEmojiLimit: (interaction) => {
+        let guild = interaction.guild;
+        let limit = 50;
+        switch (guild.premiumTier) {
+            case 1: limit = 100; break;
+            case 2: limit = 150; break;
+            case 3: limit = 250; break;
+        };
+        return limit;
+    },
+    serverStickerLimit: (interaction) => {
+        let guild = interaction.guild;
+        let limit = 5;
+        switch (guild.premiumTier) {
+            case 1: limit = 15; break;
+            case 2: limit = 30; break;
+            case 3: limit = 60; break;
+        };
+        return limit;
+    },
+    toFirstCase: (str) => {
+		if (str.length < 2) return str;
+		return str[0].toUpperCase() + str.slice(1).toLowerCase();
+	},
+	toGrammarCase: function (str, all) {
+		if (!all) return this.toFirstCase(str);
+		return str.split(' ').map(this.toFirstCase).join(' ');
+	},
+	toRandomCase: (str) => {
+		nums = [];
+		for (var i = 0; i < str.length; i++) nums.push(Math.floor(Math.random() * 2));
+		return str.split('').map((char, i) => (nums[i] == 0) ? char.toLowerCase() : char.toUpperCase()).join('');
+	},
+	toAlternatingCase: (str) => {
+		const arr = str.split("");
+		const results = [];
+		arr.map((char, index) => { if (index % 2 === 0) { results.push(char.toLowerCase()) } else { results.push(char.toUpperCase()) }});
+		return results.join("");
+	},
+    aposify: (text) => {
+		let list = text.split(' ');
+		for (var word in list) { if (typeof list[word] == 'string') list[word] = (list[word][list[word].length - 1].toLowerCase() == 's') ? `${list[word]}'` : `${list[word]}'s` };
+		return list.join(' ');
+	},
+    stripMarkdown: (text) => {
+        return text.replace(/([*_~`#|])/g, '\\$1');
     }
 };
 module.exports = functions;

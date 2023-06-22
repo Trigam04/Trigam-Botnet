@@ -14,12 +14,6 @@ const components = {
         return emb;
     },
     userInfoEmbed: (user, member, guild) => {
-        // Activity
-        let activity = member.presence ? member.presence.activities[0] : null;
-        if (activity && activity.state) activityString = activity.state;
-        else if (activity && activity.name) activityString = activity.name;
-        else activityString = "No activity";
-        if (activity && activity.emoji) activityString = `${activity.emoji.name} ${activityString}`;
         // Banner
         if (user.banner) banner = `https://cdn.discordapp.com/banners/${user.id}/${user.banner}.png?size=1024`;
         // Roles
@@ -28,22 +22,25 @@ const components = {
         let sliced = roles.length >= roleLimit ? roles.slice(0, roleLimit - 1) : roles.slice(0, roleLimit);
         let roleString = "";
         for (let i = 0; i < sliced.length; i++) {
-            console.log(roles[i])
             if (i == roles.length - 1) roleString += `<@&${roles[i].id}>`;
             else roleString += roles[i].toString() + ", ";
         }
         if (roles.length >= roleLimit) roleString += ` and ${roles.length - roleLimit} more...`;
         infoEmbed = new EmbedBuilder()
-            .setTitle(`${member.nickname ? member.nickname : user.username}'s info`)
-            .setColor(member.displayColor ? member.displayColor : embedConfig.colors.default)
+            .setTitle(`${user.display_name ? user.display_name : user.username}'s info`)
+            .setColor(member.display_color ? member.display_color : embedConfig.colors.default)
             .setThumbnail(`https://cdn.discordapp.com/avatars/${user.id}/${user.avatar}.png?size=1024`)
             .addFields({
                 name: "User ID",
                 value: member.id,
                 inline: false
             }, {
-                name: "Tag",
-                value: `${user.username}#${user.discriminator}`,
+                name: "Display Name",
+                value: `${user.display_name}`,
+                inline: true
+            }, {
+                name: "Username",
+                value: `${user.username}`,
                 inline: true
             }, {
                 name: "Nickname",
@@ -58,19 +55,16 @@ const components = {
                 value: member.presence ? presences[member.presence.status] : presences["offline"],
                 inline: true
             }, {
-                name: "Status",
-                value: activityString ? activityString : "None",
-            }, {
                 name: "Permissions",
                 value: `[${member.permissions.bitfield}](https://discordapi.com/permissions.html#${member.permissions.bitfield})`,
                 inline: true
             }, {
                 name: "Joined",
-                value: member.joinedAt.toLocaleString(),
+                value: `<t:${Math.round(member.joinedAt.getTime() / 1000)}:R>`,
                 inline: true
             }, {
                 name: "Created",
-                value: member.user.createdAt.toLocaleString(),
+                value: `<t:${Math.round(member.user.createdAt.getTime() / 1000)}:R>`,
                 inline: true
             }, {
                 name: "Roles",

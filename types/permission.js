@@ -102,4 +102,11 @@ module.exports = {
     moderate: "0x0000010000000000",
     moderate_server_members: "0x0000010000000000",
     moderate_guild_members: "0x0000010000000000",
+    view_creator_monetization_analytics: "0x0000020000000000",
+    use_soundboard: "0x0000040000000000",
+    soundboard: "0x0000040000000000",
+    use_external_sounds: "0x0000200000000000",
+    external_sounds: "0x0000200000000000",
+    send_voice_messages: "0x0000400000000000",
+    voice_messages: "0x0000400000000000",
 }

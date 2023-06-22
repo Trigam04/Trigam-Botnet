@@ -3,6 +3,7 @@ const pooler = require('../../functions/pooler.js');
 module.exports = {
     name: "quote",
     description: "Get quotes from your favorite characters!",
+    enabled: true,
     options: [
         {
             type: ApplicationCommandOptionType.String,
@@ -23,7 +24,7 @@ module.exports = {
     ],
     type: ApplicationCommandType.ChatInput,
 	execute: async (Discord, bot, interaction, options, subcommand) => {
-        let quote = pooler[options.character.split('_')[1]](interaction.id);
+        let quote = await pooler[options.character.split('_')[1]](interaction.id);
         await interaction.reply({ content: `> "${quote}"` });   
     }
 };

@@ -2,6 +2,7 @@ const { ApplicationCommandType, ApplicationCommandOptionType } = require('discor
 module.exports = {
     name: "sudo",
     description: "Speak as another user!",
+    enabled: true,
     options: [
         {
             type: ApplicationCommandOptionType.User,
@@ -18,6 +19,7 @@ module.exports = {
     ],
     type: ApplicationCommandType.ChatInput,
 	execute: async (Discord, bot, interaction, options, subcommand) => {
+        await interaction.reply({ content: `Sending...`, ephemeral: true });
         let user = await interaction.guild.members.cache.get(options.user);
         let webhook = await interaction.channel.createWebhook({
             name: user.nickname ? user.nickname : user.user.username,
@@ -25,6 +27,5 @@ module.exports = {
         });
         await webhook.send(options.message);
         await webhook.delete();
-        await interaction.reply({ content: `Sent the message!`, ephemeral: true });
     }
 };

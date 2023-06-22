@@ -4,9 +4,11 @@ const bracketeer = require('../../functions/bracketeer.js');
 module.exports = {
     name: "ping",
     description: "Responds with the ping of the bot!",
+    enabled: true,
     type: ApplicationCommandType.ChatInput,
 	execute: async (Discord, bot, interaction, options, subcommand) => {
-        let sent = await interaction.reply({ content: "Pinging...", fetchReply: true });
+        await interaction.deferReply();
+        let sent = await interaction.editReply({ content: "Pinging...", fetchReply: true });
         let latency = sent.createdTimestamp - interaction.createdTimestamp;
         var response = "...";
         let general = Math.floor(Math.random() * 2) == 1;
@@ -17,7 +19,7 @@ module.exports = {
             case latency < 1500: response = pooler.pingHigh(); break;
             case latency > 1500: response = pooler.pingVeryHigh(); break;
         };
-        response = pooler.pingGeneral();
+        if (general) response = pooler.pingGeneral();
         response = await bracketeer(response, null, {loopLimit: 500}, bot, Discord, interaction);
         await interaction.editReply({ content: `**${response[0]}**\nLatency: \`${latency} ms\`\nWebsocket Latency: \`${bot.ws.ping} ms\`` });
     }

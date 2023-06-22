@@ -4,6 +4,7 @@ const seedrandom = require('seedrandom');
 module.exports = {
     name: "rate",
     description: "Give a rating on anything",
+    enabled: true,
     options: [
         {
             type: ApplicationCommandOptionType.String,

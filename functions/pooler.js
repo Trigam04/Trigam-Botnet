@@ -1,6 +1,7 @@
 const seedrandom = require('seedrandom');
 const ut = require('./utilitrigam.js');
 const logins = require('../pools/start.json');
+const barry = require('../pools/quotes/barry.json');
 const gex = require('../pools/quotes/gex.json');
 const krabs = require('../pools/quotes/krabs.json');
 const maui = require('../pools/quotes/maui.json');
@@ -12,6 +13,7 @@ const ping = require('../pools/ping.json');
 module.exports = {
     login: (seed) => { return ut.randomElem(logins, seed) },
     // Quote
+    barry: (seed) => { return ut.randomElem(barry, seed) },
     gex: (seed) => { return ut.randomElem(gex, seed) },
     krabs: (seed) => { return ut.randomElem(krabs, seed) },
     maui: (seed) => { return ut.randomElem(maui, seed) },

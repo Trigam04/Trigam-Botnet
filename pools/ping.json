@@ -13,7 +13,6 @@
         "Hello",
         ".. *pong*",
         "Hi guys what's up",
-        "2.2 when",
         "Now with 100% latency reduction",
         "<insert response here>",
         "Bird up!",
@@ -64,7 +63,10 @@
         ".. *yawn*",
         "Yeah I wasn't even trying on that one",
         "This isn't the fastest I can go",
-        "This isn't the 7 ms that was advertised!"
+        "This isn't the 7 ms that was advertised!",
+        "{client|username} is thinking...",
+        "sorry, still a bit sleepy from booting up",
+        "If you want any faster, try waking up RoboTop... oh wait"
     ],
     "high": [
         "Well, at least it's something",
@@ -79,7 +81,8 @@
         "Not exactly my proudest moment..",
         "oops, wrote down the wrong number",
         "...oh hey, I'm still alive",
-        "huh? you're still there?"
+        "huh? you're still there?",
+        "hey if you want any faster, do it yourself"
     ],
     "veryHigh": [
         "Bite my shiny metal ass",

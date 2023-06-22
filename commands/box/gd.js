@@ -8,6 +8,7 @@ const fs = require('fs');
 module.exports = {
     name: "gd",
     description: "Get Geometry Dash data straight from the servers!",
+    enabled: false,
     options: [
         {
             name: "profile",

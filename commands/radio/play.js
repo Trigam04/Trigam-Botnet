@@ -9,6 +9,7 @@ const { SpotifyPlugin } = require('@distube/spotify');
 module.exports = {
     name: "play",
     description: "Plays a song",
+    enabled: true,
     options: [
         {
             type: ApplicationCommandOptionType.String,
@@ -53,7 +54,6 @@ module.exports = {
                 const collector = interaction.channel.createMessageComponentCollector(ut.collectFilter, { time: 60000 });
                 collector.on('collect', async (i) => {
                     if (i.customId === 'music_play_song_select') {
-                        i.deferUpdate();
                         let selectedURL = i.values[0];
                         let selected = videos.filter(video => video.url == selectedURL)[0];
                         await playSongURL(selected, interaction, voiceChannel);
