@@ -28,6 +28,6 @@ module.exports = {
         let fixed = coded[0].toString().substring(0, 2000);
         if (fixed.length <= 0) fixed = "Cannot send empty message!";
         try { await interaction.reply({ content: fixed, ephemeral: coded[1].ephemeral }); }
-        catch (e) { console.error(e); }
+        catch (e) { /* fuck you i'm not logging this */ }
     }
 };

@@ -70,22 +70,27 @@ class Bracketeer {
     // Math (complex)
     sqrt (num) { return Math.sqrt(Number(num)) };
     root (num, root) { return ut.root(Number(num), Number(root)) };
-    // log
-    // logbase
+    log (num) { return Math.log10(Number(num)) };
+    logbase (num, base) { return Math.log(Number(num)) / Math.log(Number(base)) };
     // base
-    // factorial
-    // cos
-    // cosh
-    // acos
-    // acosh
-    // sin
-    // sinh
-    // asin
-    // asinh
-    // tan
-    // tanh
-    // atan
-    // atanh
+    factorial (num) {
+        let rval = 1;
+        for (let i = 2; i <= Number(num); i++) rval = rval * i;
+        return rval;
+    };
+    cos (num) { return Math.cos(Number(num)) };
+    cosh (num) { return Math.cosh(Number(num)) };
+    acos (num) { return Math.acos(Number(num)) };
+    acosh (num) { return Math.acosh(Number(num)) };
+    sin (num) { return Math.sin(Number(num)) };
+    sinh (num) { return Math.sinh(Number(num)) };
+    asin (num) { return Math.asin(Number(num)) };
+    asinh (num) { return Math.asinh(Number(num)) };
+    tan (num) { return Math.tan(Number(num)) };
+    tanh (num) { return Math.tanh(Number(num)) };
+    atan (num) { return Math.atan(Number(num)) };
+    atan2 (num1, num2) { return Math.atan2(Number(num1), Number(num2)) };
+    atanh (num) { return Math.atanh(Number(num)) };
 
     // User
     async user(user, property, ...properties) {
@@ -233,10 +238,13 @@ class Bracketeer {
             };
             case 'hoist':
             case 'hoisted': return role.hoist;
+            case 'external':
             case 'managed': return role.managed;
             case 'mentionable': return role.mentionable;
             case 'permissions':
             case 'perms': return role.permissions.bitfield;
+            case 'rawposition': return role.rawPosition;
+            case 'editable': return role.editable;
             default: return role.name;
         };
     };
@@ -528,6 +536,14 @@ class Bracketeer {
         return result ? result.split(':')[1].trim() : defaultCase ? defaultCase.split(':')[1].trim() : '';
     };
     hexcolor (color) { return ut.getColor(color).hex };
+    char (...codes) { return String.fromCharCode(...codes) };
+    charcode (string) {
+        let codes = [];
+        for (let i = 0; i < string.length; i++) {
+            codes.push(string.charCodeAt(i));
+        }
+        return codes.length === 1 ? codes[0] : codes;
+    };
 
     // Functions
     send (channel, content) {
@@ -583,11 +599,7 @@ module.exports = Bracketeer;
 {message|webhook}
 
 ?--| ROLE |--?
-{role|rawposition}
-{role|external}
-{role|editable}
 {role|icon}
-{role|managed}
 {role|emoji} / {role|emote} / {role|unicodeemoji} / {role|unicodeemote} / {role|unicode}
 
 ?--| TEXT |--?
