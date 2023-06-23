@@ -1,3 +1,4 @@
+const moment = require('moment');
 const ut = require('./utilitrigam.js');
 const { ChannelType } = require('discord.js');
 const channelType = require('../types/channelType.js');
@@ -12,18 +13,24 @@ class Bracketeer {
         this.vars = [];
         // Output
         this.ephemeral = false;
+        this.emb = null;
     };
-    // MATH/NUMBERS
-    // Math (Simple)
+
+    // MATH (SIMPLE)
     add(...nums) { return nums.reduce((a, b) => Number(a) + Number(b)) };
-    subtract (...nums) { return nums.reduce((a, b) => Number(a) - Number(b)) };
-    multiply (...nums) { return nums.reduce((a, b) => Number(a) * Number(b)) };
-    divide (...nums) { return nums.reduce((a, b) => Number(a) / Number(b)) };
-    modulo (...nums) { return nums.reduce((a, b) => Number(a) % Number(b)) };
-    remainder (...nums) { return nums.reduce((a, b) => Number(a) % Number(b)) };
+    sub (...nums) { return nums.reduce((a, b) => Number(a) - Number(b)) };
+    subtract (...nums) { return this.sub(...nums) };
+    mult (...nums) { return nums.reduce((a, b) => Number(a) * Number(b)) };
+    multiply (...nums) { return this.mult(...nums) };
+    div (...nums) { return nums.reduce((a, b) => Number(a) / Number(b)) };
+    divide (...nums) { return this.div(...nums) };
+    mod (...nums) { return nums.reduce((a, b) => Number(a) % Number(b)) };
+    modulo (...nums) { return this.mod(...nums) };
+    rem (...nums) { return nums.reduce((a, b) => Number(a) % Number(b)) };
+    remainder (...nums) { return this.rem(...nums) };
     exponent (...nums) { return nums.reduce((a, b) => Number(a) ** Number(b)) };
-    pow (...nums) { return nums.reduce((a, b) => Number(a) ** Number(b)) };
-    power (...nums) { return this.pow(...nums) };
+    pow (...nums) { return this.exponent(...nums) };
+    power (...nums) { return this.exponent(...nums) };
     round (num) { return Math.round(Number(num)) };
     fixed (num, n) { return Number.parseFloat(num).toFixed(n) };
     floor (num) { return Math.floor(Number(num)) };
@@ -40,7 +47,32 @@ class Bracketeer {
     nth (num, exclude) { return ut.nthify(num, exclude) };
     nthify (num, exclude) { return this.nth(num, exclude) };
     pi () { return Math.PI };
-    // Math (logic)
+    // MATH (ADVANCED)
+    sqrt (num) { return Math.sqrt(Number(num)) };
+    root (num, root) { return ut.root(Number(num), Number(root)) };
+    log (num) { return Math.log10(Number(num)) };
+    logbase (num, base) { return Math.log(Number(num)) / Math.log(Number(base)) };
+    // base
+    fact (num) {
+        let rval = 1;
+        for (let i = 2; i <= Number(num); i++) rval = rval * i;
+        return rval;
+    };
+    factorial (num) { return this.fact(num) };
+    cos (num) { return Math.cos(Number(num)) };
+    cosh (num) { return Math.cosh(Number(num)) };
+    acos (num) { return Math.acos(Number(num)) };
+    acosh (num) { return Math.acosh(Number(num)) };
+    sin (num) { return Math.sin(Number(num)) };
+    sinh (num) { return Math.sinh(Number(num)) };
+    asin (num) { return Math.asin(Number(num)) };
+    asinh (num) { return Math.asinh(Number(num)) };
+    tan (num) { return Math.tan(Number(num)) };
+    tanh (num) { return Math.tanh(Number(num)) };
+    atan (num) { return Math.atan(Number(num)) };
+    atan2 (num1, num2) { return Math.atan2(Number(num1), Number(num2)) };
+    atanh (num) { return Math.atanh(Number(num)) };
+    // MATH (LOGIC)
     //and (...nums) { return ut.bitwise('and', nums) };
     //or (...nums) { return ut.bitwise('or', nums) };
     //xor (...nums) { return ut.bitwise('xor', nums) };
@@ -67,38 +99,119 @@ class Bracketeer {
     greaterthan (num1, num2, orEqual) { return this.greater(num1, num2, orEqual) };
     equal (num1, num2) { return Number(num1 === num2).toString() };
     equalto (num1, num2) { return this.equal(num1, num2) };
-    // Math (complex)
-    sqrt (num) { return Math.sqrt(Number(num)) };
-    root (num, root) { return ut.root(Number(num), Number(root)) };
-    log (num) { return Math.log10(Number(num)) };
-    logbase (num, base) { return Math.log(Number(num)) / Math.log(Number(base)) };
-    // base
-    factorial (num) {
-        let rval = 1;
-        for (let i = 2; i <= Number(num); i++) rval = rval * i;
-        return rval;
-    };
-    cos (num) { return Math.cos(Number(num)) };
-    cosh (num) { return Math.cosh(Number(num)) };
-    acos (num) { return Math.acos(Number(num)) };
-    acosh (num) { return Math.acosh(Number(num)) };
-    sin (num) { return Math.sin(Number(num)) };
-    sinh (num) { return Math.sinh(Number(num)) };
-    asin (num) { return Math.asin(Number(num)) };
-    asinh (num) { return Math.asinh(Number(num)) };
-    tan (num) { return Math.tan(Number(num)) };
-    tanh (num) { return Math.tanh(Number(num)) };
-    atan (num) { return Math.atan(Number(num)) };
-    atan2 (num1, num2) { return Math.atan2(Number(num1), Number(num2)) };
-    atanh (num) { return Math.atanh(Number(num)) };
 
-    // User
+    // TEXT
+    trim (text) { return text.trim() };
+    test (text1, text2, match, noMatch) { 
+        let matching = (text1?.trim() === text2?.trim());
+        if (matching) return match?.trim();
+        else if (!matching && noMatch) return noMatch?.trim();
+        else return '';
+    };
+    length (text) { return text.length };
+    upper (text) { return text.toUpperCase() };
+    lower (text) { return text.toLowerCase() };
+    capitalize (text, all) { return ut.toGrammarCase(text, all) };
+    deform (text, alternating) { return alternating ? ut.toAlternatingCase(text) : ut.toRandomCase(text) };
+    reverse (text) { return text.split('').reverse().join('') };
+    repeat (text, times) { return text.repeat(times) };
+    limit (string, num) { return string.slice(0, Math.abs(Number(num))) };
+    split (string, index, splitter = ' ') { return string.split(splitter)[index] };
+    url (text) { return encodeURIComponent(text) };
+    urlify (text) { return this.url(text) };
+    apos (text) { return ut.aposify(text) };
+    aposify (text) { return this.apos(text) };
+    slice (string, start, end) { return end ? string.slice(Math.abs(Number(start)), string.length - Math.abs(Number(end))) : string.slice(Math.abs(Number(start))) };
+    unmark (...strings) { return ut.stripMarkdown(strings.join('')) };
+    contains (string, substring) { return string.split(substring).length - 1 };
+    spoiler (string) { return `||${string}||` };
+    insert (string, chars, substring) { return ut.addItemEvery(string, substring, Number(chars)) };
+    replace (string, find, replace, caseSensitive = false) { return caseSensitive ? string.split(find).join(replace) : string.split(find.toLowerCase()).join(replace.toLowerCase()) };
+    multireplace (string, ...replacements) {
+        let newString = string;
+        for (let replacement of replacements) {
+            let [ find, replace ] = replacement.split(':');
+            newString = this.replace(newString, find, replace, true);
+        };
+        return newString;
+    };
+    regex (string, expression, index, captureGroups = false) {
+        let regex = new RegExp(expression.replace(/❴/g, '{').replace(/❵/g, '}'), captureGroups ? '' : 'g');
+        let result = string.match(regex);
+        if (!result) return '';
+        if (index) return result[Number(index)];
+        return result;
+    };
+    regexreplace (string, expression, replace) { return string.replace(new RegExp(expression.replace(/❴/g, '{').replace(/❵/g, '}'), 'g'), replace) };
+
+    // LIST
+    params (list, splitter) { return list.split(splitter).join('|') };
+    choose (...list) { return list[Math.floor(Math.random() * list.length)] };
+    multichoose (results, splitter, ...list) {
+        let chosen = [];
+        let newList = list;
+        for (let i = 0; i < results; i++) {
+            let item = newList[Math.floor(Math.random() * newList.length)];
+            chosen.push(item);
+            newList = newList.filter(i => i !== item);
+            if (newList.length === 0) newList = list;
+        }
+        return chosen.join(splitter);
+    };
+    empty (...list) { return list.find(i => i) || '' };
+    before (index, splitter, ...list) { return list.slice(0, Math.abs(Number(index))).join(splitter) };
+    after (index, splitter, ...list) { return list.slice(Math.abs(Number(index)) + 1).join(splitter) };
+    diff (list1, list2, splitter, joiner) {
+        let arr1 = list1.split(splitter);
+        let arr2 = list2.split(splitter);
+        return arr1.filter(x => !arr2.includes(x)).concat(arr2.filter(x => !arr1.includes(x))).join(joiner);
+    };
+    difference (list1, list2, splitter, joiner) { return this.diff(list1, list2, splitter, joiner) };
+    intersect (list1, list2, splitter, joiner) { return list1.split(splitter).filter(x => list2.split(splitter).includes(x)).join(joiner) };
+    union (list1, list2, splitter, joiner) { return list1.split(splitter).concat(list2.split(splitter).filter(x => !list1.split(splitter).includes(x))).join(joiner) }
+    unite (list1, list2, splitter, joiner) { return this.union(list1, list2, splitter, joiner) };
+    uniq (splitter, ...list) { return [...new Set(list)].join(splitter) };
+    unique (splitter, ...list) { return this.uniq(splitter, ...list) };
+    // UTILITY
+    args (index) {
+        if (!index) return this.argsArr ? this.argsArr.join(' ') : '';
+        if (index == '#') return this.argsArr?.length;
+        return this.argsArr ? this.argsArr[index] ? this.argsArr[index] : '' : '';
+    };
+    var (name, val) {
+        if (val) { this.vars[name] = val; return '' };
+        return this.vars[name];
+    };
+    switch (string, ...cases) {
+        let defaultCase = cases.find(c => !c.includes(':')) || cases.find(c => c.split(':')[0]?.trim() === 'default');
+        if (defaultCase && defaultCase.includes(':')) var defaultResult = defaultCase.split(':')[1]?.trim();
+        else if (defaultCase && !defaultCase.includes(':')) var defaultResult = defaultCase.trim();
+        let result = cases.find(c => c.split(':')[0]?.trim() === string.trim());
+        return result ? result.split(':')[1]?.trim() : defaultResult ? defaultResult : '';
+    };
+    hexcolor (color) { return ut.getColor(color)?.hex };
+    char (...codes) { return String.fromCharCode(...codes) };
+    charcode (string) {
+        let codes = [];
+        for (let i = 0; i < string.length; i++) {
+            codes.push(string.charCodeAt(i));
+        }
+        return codes.length === 1 ? codes[0] : codes;
+    };
+    date (formatting, offset, timestamp) {
+        offset = (Number(offset) + 1);
+        if (isNaN(offset)) offset = 1;
+        let time = moment(timestamp ? timestamp : Date.now())
+        return time.utcOffset(offset).format(formatting);
+    };
+    unix (divide) { return Math.floor(Date.now() / (divide ? 1000 : 1)) };
+
+    // USER
     async user(user, property, ...properties) {
         if (!user) user = this.interaction.user.id;
         let member = ut.getMember(user, this.interaction, this.bot);
         if (!member) {
-            properties.unshift(property);
-            property = user;
+            properties.unshift(user);
             user = this.interaction.user.id;
             member = ut.getMember(user, this.interaction, this.bot);
         };
@@ -120,6 +233,7 @@ class Bracketeer {
             case 'nickname': return member.nickname ? member.nickname : member.user.username || 'Unknown';
             case 'id': return member.user.id || 0;
             case 'bot': return member.user.bot || false;
+            case 'pfp':
             case 'avatar': return member.user.displayAvatarURL({ dynamic: true, size: 2048 }) || 'https://cdn.discordapp.com/embed/avatars/0.png';
             case 'hasrole': {
                 if (!properties[0]) return 'Invalid role!';
@@ -134,12 +248,6 @@ class Bracketeer {
             case 'rolecolor':
             case 'rolecolour': return member.displayHexColor || "#000000";
             case 'status': return member.presence.status || 'offline';
-            case 'activity': {
-                if (member.presence) {
-                    let activity = member.presence.activities[0];
-                    return activity ? activity.name : 'None';
-                } else return "None";
-            };
             case 'hasperm':
             case 'permission':
             case 'haspermission': return ut.memberHasPerm(member, properties[0]);
@@ -147,15 +255,15 @@ class Bracketeer {
             case 'permissions': return member.permissions.bitfield;
             case 'joined':
             case 'joinedat': {
-                let unit = properties[0] || 'millis';
-                let date = member.joinedAt.getTime() / 1000 || 0;
-                return ut.unitsSince(date, unit);
+                let unit = properties[0] || 'timestamp';
+                let date = member.joinedAt.getTime() || 0;
+                return unit == 'timestamp' ? Math.round(date/1000) : ut.unitsSince(date, unit);
             };
             case 'created':
             case 'createdat': {
-                let unit = properties[0] || 'millis';
-                let date = member.user.createdAt.getTime() / 1000 || 0;
-                return ut.unitsSince(date, unit);
+                let unit = properties[0] || 'timestamp';
+                let date = member.user.createdAt.getTime() || 0;
+                return unit == 'timestamp' ? Math.round(date/1000) : ut.unitsSince(date, unit);
             };
             case 'bannable': return member.bannable;
             case 'kickable': return member.kickable;
@@ -194,6 +302,7 @@ class Bracketeer {
     nickname (user) { return this.user(user, 'nickname') };
     id (user) { return this.user(user, 'id') };
     bot (user) { return this.user(user, 'bot') };
+    pfp (user) { return this.user(user, 'pfp') };
     avatar (user) { return this.user(user, 'avatar') };
     hasrole (user, role) { return this.user(user, 'hasrole', role) };
     roles (user) { return this.user(user, 'roles') };
@@ -202,7 +311,6 @@ class Bracketeer {
     rolecolor (user) { return this.user(user, 'rolecolor') };
     rolecolour (user) { return this.user(user, 'rolecolour') };
     status (user) { return this.user(user, 'status') };
-    activity (user) { return this.user(user, 'activity') };
     hasperm (user, perm) { return perm ? this.user(user, 'hasperm', perm) : this.user(this.interaction.member.id, 'hasperm', user) };
     permission (user, perm) { return this.hasperm(user, perm) };
     haspermission (user, perm) { return this.hasperm(user, perm) };
@@ -222,29 +330,29 @@ class Bracketeer {
         switch (property) {
             case 'name': return role.name;
             case 'id': return role.id;
-            case 'color':
-            case 'colour': return role.hexColor;
-            case 'position': return role.position;
-            case 'members': return role.members.size;
             case '@':
             case 'tag':
             case 'mention': return role.toString();
+            case 'color':
+            case 'colour': return role.hexColor;
+            case 'position': return role.position;
+            case 'rawposition': return role.rawPosition;
+            case 'hoist':
+            case 'hoisted': return role.hoist;
+            case 'mentionable': return role.mentionable;
+            case 'external':
+            case 'managed': return role.managed;
             case 'timestamp':
             case 'created':
             case 'createdat': {
-                let unit = properties[0] || 'millis';
-                let date = role.createdAt.getTime() / 1000 || 0;
-                return ut.unitsSince(date, unit);
+                let unit = properties[0] || 'timestamp';
+                let date = role.createdAt.getTime() || 0;
+                return unit == 'timestamp' ? Math.round(date/1000) : ut.unitsSince(date, unit);
             };
-            case 'hoist':
-            case 'hoisted': return role.hoist;
-            case 'external':
-            case 'managed': return role.managed;
-            case 'mentionable': return role.mentionable;
+            case 'editable': return role.editable;
+            case 'members': return role.members.size;
             case 'permissions':
             case 'perms': return role.permissions.bitfield;
-            case 'rawposition': return role.rawPosition;
-            case 'editable': return role.editable;
             default: return role.name;
         };
     };
@@ -253,7 +361,7 @@ class Bracketeer {
     // User funcs
     randomuser () { return ut.randomMember(this.interaction).user.id };
 
-    // Server
+    // SERVER
     server (property, ...properties) {
         let server = this.interaction.guild;
         switch (property) {
@@ -347,9 +455,9 @@ class Bracketeer {
             };
             case 'created':
             case 'createdat': {
-                let unit = properties[0] || 'millis';
-                let date = server.createdAt.getTime() / 1000 || 0;
-                return ut.unitsSince(date, unit);
+                let unit = properties[0] || 'timestamp';
+                let date = server.createdAt.getTime() || 0;
+                return unit == 'timestamp' ? Math.round(date/1000) : ut.unitsSince(date, unit);
             };
             case 'owner': return server.ownerId;
             case 'roles': return server.roles.cache.size;
@@ -456,7 +564,7 @@ class Bracketeer {
         };
     };
     
-    // Channel
+    // CHANNEL
     channel (property, ...args) {
         let channel = this.interaction.channel;
         if (args[0] && ut.getChannel(args[0], this.interaction)) {
@@ -477,9 +585,9 @@ class Bracketeer {
             case 'slowmode': return channel.rateLimitPerUser;
             case 'created':
             case 'createdat': {
-                let unit = args[0] || 'millis';
-                let date = channel.createdAt.getTime() / 1000 || 0;
-                return ut.unitsSince(date, unit);
+                let unit = args[0] || 'timestamp';
+                let date = channel.createdAt.getTime() || 0;
+                return unit == 'timestamp' ? Math.round(date/1000) : ut.unitsSince(date, unit);
             };
             case 'thread': return channel.isThread();
             case 'manageable': return channel.manageable;
@@ -488,209 +596,50 @@ class Bracketeer {
             case 'viewable': return channel.viewable;
             case 'members': return Array.from(channel.members.keys()).length;
         }
-    } 
-
-    // Text
-    trim (text) { return text.trim() };
-    test (text1, text2, match, noMatch) { return text1 === text2 ? match : noMatch };
-    length (text) { return text.length };
-    upper (text) { return text.toUpperCase() };
-    lower (text) { return text.toLowerCase() };
-    capitalize (text, all) { return ut.toGrammarCase(text, all) };
-    deform (text, alternating) { return alternating ? ut.toAlternatingCase(text) : ut.toRandomCase(text) };
-    reverse (text) { return text.split('').reverse().join('') };
-    repeat (text, times) { return text.repeat(times) };
-    limit (string, num) { return string.slice(0, Math.abs(Number(num))) };
-    split (string, index, splitter = ' ') { return string.split(splitter)[index] };
-    splitlength (splitter, list) { return list.split(splitter).length };
-    url (text) { return encodeURIComponent(text) };
-    urlify (text) { return this.url(text) };
-    apos (text) { return ut.aposify(text) };
-    aposify (text) { return this.apos(text) };
-    slice (string, start, end) { return end ? string.slice(Math.abs(Number(start)), string.length - Math.abs(Number(end))) : string.slice(Math.abs(Number(start))) };
-    unmark (...strings) { return ut.stripMarkdown(strings.join('')) };
-    contains (string, substring) { return string.split(substring).length - 1 };
-    spoiler (string) { return `||${string}||` };
-    replace (string, find, replace, caseSensitive = false) { return caseSensitive ? string.split(find).join(replace) : string.split(find.toLowerCase()).join(replace.toLowerCase()) };
-    regex (string, expression, index, captureGroups = false) {
-        let regex = new RegExp(expression, captureGroups ? '' : 'g');
-        let result = string.match(regex);
-        if (!result) return '';
-        if (index) return result[Number(index)];
-        return result;
-    };
-    regexreplace (string, expression, replace) { return string.replace(new RegExp(expression, 'g'), replace) };
-
-    // List
-    params (list, splitter) { return list.split(splitter).join('|') };
-    choose (...list) { return list[Math.floor(Math.random() * list.length)] };
-    multichoose (results, splitter, ...list) {
-        let chosen = [];
-        let newList = list;
-        for (let i = 0; i < results; i++) {
-            let item = newList[Math.floor(Math.random() * newList.length)];
-            chosen.push(item);
-            newList = newList.filter(i => i !== item);
-            if (newList.length === 0) newList = list;
-        }
-        return chosen.join(splitter);
-    };
-    empty (...list) { return list.find(i => i) || '' };
-
-    // Utility
-    args (index) {
-        if (!index) return this.argsArr ? this.argsArr.join(' ') : '';
-        return this.argsArr ? this.argsArr[index] : ''
-    };
-    var (name, val) {
-        if (val) { this.vars[name] = val; return '' };
-        return this.vars[name];
-    };
-    switch (string, ...cases) {
-        let defaultCase = cases.find(c => c.split(':')[0].trim() === 'default');
-        let result = cases.find(c => c.split(':')[0].trim() === string.trim());
-        return result ? result.split(':')[1].trim() : defaultCase ? defaultCase.split(':')[1].trim() : '';
-    };
-    hexcolor (color) { return ut.getColor(color).hex };
-    char (...codes) { return String.fromCharCode(...codes) };
-    charcode (string) {
-        let codes = [];
-        for (let i = 0; i < string.length; i++) {
-            codes.push(string.charCodeAt(i));
-        }
-        return codes.length === 1 ? codes[0] : codes;
     };
 
-    // Functions
+    // MESSAGE
+
+    // COMPONENTS
+    embed (property, ...args) {
+        if (this.emb == null) this.emb = { fields: [] };
+        switch (property) {
+            case 'title': this.emb.title = args[0]; break;
+            case 'description': this.emb.description = args[0]; break;
+            case 'author': this.emb.author = {name: args[0], icon_url: args[1]}; break;
+            case 'color': this.emb.color = ut.stringToHex(args[0]); break;
+            case 'time':
+            case 'timestamp': this.emb.timestamp = new Date(Number(args[0]) * 1000).toISOString(); break;
+            case 'footer': this.emb.footer = {text: args[0], icon_url: args[1]}; break;
+            case 'thumbnail': this.emb.thumbnail = {url: args[0]}; break;
+            case 'image': this.emb.image = {url: args[0]}; break;
+            case 'field': {
+                let inline = args[2] ? true : false;
+                this.emb.fields.push({
+                    name: args[0] ? args[0] : "No name",
+                    value: args[1] ? args[1] : "No value",
+                    inline: inline
+                });
+                break;
+            };
+        };
+        return "";
+    };
+
+    // FUNCTIONS
+    // VERY EARLY PROTOTYPES
     send (channel, content) {
-        this.ephemeral = true;
         let fetchedChannel = ut.getChannel(channel, this.interaction);
         if (!fetchedChannel) return "Invalid channel!";
         fetchedChannel.send({ content: content })
-        return "Sent message!";
+        return "";
     };
     async reply (channel, message, content) {
-        this.ephemeral = true;
         let fetchedMessage = await ut.getMessage(channel, message, this.interaction);
         if (!fetchedMessage) return "Invalid message!";
         fetchedMessage.reply({ content: content })
-        return "Replied to message!";
+        return "";
     };
 };
 
 module.exports = Bracketeer;
-
-
-/*
-
-?--| MESSAGE |--?
-{message|id}
-{message|content}
-{message|timestamp} / {message|created} / {message|createdat}
-{message|edited} / {message|editedat}
-{message|tts} / {message|texttospeech}
-{message|url}
-{message|emojis}
-{message|author}
-{message|channel}
-{message|server} / {message|guild}
-{message|type}
-{message|system}
-{message|pinned}
-{message|edited}
-{message|attachments}
-{message|embeds}
-{message|mentions}
-{message|reactions}
-{message|editable}
-{message|deletable}
-{message|pinnable}
-{message|components}
-{message|cleancontent}
-{message|crossposted}
-{message|hasthread} / {message|thread}
-{message|interaction}
-{message|position}
-{message|stickers}
-{message|webhook}
-
-?--| ROLE |--?
-{role|icon}
-{role|emoji} / {role|emote} / {role|unicodeemoji} / {role|unicodeemote} / {role|unicode}
-
-?--| TEXT |--?
-{global|name|val}
-
-?--| NUMBERS |--?
---| Logic |--
-{and| [nums] }
-{or| [nums] }
-{xor| [nums] }
-{not| [num] }
-{bit| [num1] | [operator] | [num2] }
-{bbit| [num1] | [operator] | [num2] }
---| Complex |--
-{sqrt| [num] }
-{root| [num] | [root] }
-{log| [num] }
-{logbase| [num] | [base] }
-{base| [num] | [base] | [reverse?] }
-{factorial| [num] }
-{cos| [num] }
-{cosh| [num] }
-{acos| [num] }
-{acosh| [num] }
-{sin| [num] }
-{sinh| [num] }
-{asin| [num] }
-{asinh| [num] }
-{tan| [num] }
-{tanh| [num] }
-{atan| [num] }
-{atanh| [num] }
-
-?--| LISTS |--?
-{before| [num] | [splitter] | [list] }
-{after| [num] | [splitter] | [list] }
-{diff| [list1] | [list2] | [splitter] | [joiner] } / {difference| [list1] | [list2] | [splitter] | [joiner] }
-{union| [list1] | [list2] | [splitter] | [joiner] } / {unite| [list1] | [list2] | [splitter] | [joiner] }
-{unique| [list] | [joiner] } / {uniq| [list] | [joiner] }
-{llength| [list] } / {listlength| [list] }
-{at| [list] | [num] }
-{fill| [list] | [num] | [filler] }
-{includes| [list] | [item] }
-{pop| [list] }
-{shift| [list] }
-{push| [list] | [item] }
-{reverselist| [list] }
-{sort| [list] | [type] | [reverse?] }
-
-?--| UTILITY |--?
-{date| [formatting] | [offset] | [timestamp] }
-{hexcolor| [color] | [hsl] }
-{unix| [seconds?] }
-{file| [url] }
-{emoji| [name] }
-
-?--| COMPONENTS |--?
-{embed|title| [string] }
-{embed|description| [string] }
-{embed|author| [string] | [image URL] }
-{embed|color| [color] }
-{embed|time| [timestamp] }
-{embed|footer| [string] | [image URL] }
-{embed|thumbnail| [image URL] }
-{embed|image| [image URL] }
-{embed|field| [name] | [value] | [inline?] }
-
-{button| [label] | [url] }
-
-?--| FUNCTIONS |--? (fuck you colon these are cool)
-{send| [channel ID] | [string] | [embed?] | [buttons?] | [file?] }
-{edit| [message ID] | [string] }
-{delete| [message ID] }
-{react| [message ID] | [emoji] }
-{unreact| [message ID] | [emoji] }
-{reply| [message ID] | [string] | [embed?] | [buttons?] | [file?] }
-{dm| [user ID] | [string] | [embed?] | [buttons?] | [file?] }
-*/

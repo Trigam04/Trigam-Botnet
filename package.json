@@ -14,6 +14,7 @@
         "ffmpeg-static": "^4.4.1",
         "jimp": "^0.16.0",
         "libsodium-wrappers": "^0.7.10",
+        "moment": "^2.29.4",
         "nan": "^2.14.0",
         "node-fetch": "^3.2.10",
         "process": "^0.11.10",
